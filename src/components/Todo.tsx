@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 
+
 type Props = {}
 
 export default function TodoApp({}: Props) {
@@ -51,6 +52,10 @@ export default function TodoApp({}: Props) {
         setEditeMode(null);
     }
 
+    function cancelEdit(){       
+        setEditeMode(null);
+    }
+
   return (
     <div className=''>
         <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
@@ -59,6 +64,8 @@ export default function TodoApp({}: Props) {
             <input onChange={(e) => setInputText(e.target.value)} value={inputText} type='text' 
             placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2'/>
             <button onClick={addTodo} className='bg-blue-500 text-white px-4 py-2 rounded-r'>Add</button>
+            <input  type='text' placeholder='Search task...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
+            <button className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
         </div>
         
         <ul ref={animationParent}>
@@ -74,7 +81,8 @@ export default function TodoApp({}: Props) {
                             {editeMode === todo.id ? <>
                                 <input onChange={(e) => setEditedText(e.target.value)} value={editedText} type="text" 
                                 className='border-gray-300 border rounded-1 px-4 py-2'/>
-                                <button onClick={saveEditedTodo} className='bg-green-500 text-white px-4 py-2 rounded-r'>Save</button>                               
+                                <button onClick={saveEditedTodo} className='bg-green-500 text-white px-4 py-2 rounded-r'>Save</button>
+                                <button onClick={cancelEdit} className='bg-gray-400 text-white px-4 py-2 rounded-r'>X</button>                               
                             </> : 
                             <div className=''>
                             <span>Deadline: </span>
