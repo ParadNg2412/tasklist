@@ -7,9 +7,9 @@ type Props = {}
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const [todos, setTodos] = useState([
-        {id:1, tkname:"Task 1", from: "2024/05/03T08:00", to: "2024/05/03T17:00"},
-        {id:2, tkname:"Task 2", from: "2024/05/04T08:00", to: "2024/05/04T17:00"},
-        {id:3, tkname:"Task 3", from: "2024/05/04T08:00", to: "2024/05/04T17:00"}
+        {id:1, tkname:"Todo web Layout", from: "2024/05/03T09:00", to: "2024/05/03T17:00", status: "Completed"},
+        {id:2, tkname:"Simple CRUD functions", from: "2024/05/03T08:00", to: "2024/05/03T17:00", status: "Completed"},
+        {id:3, tkname:"Datetime layout for each task", from: "2024/05/06T08:00", to: "2024/05/06T17:00"}
     ]);
     const [inputText, setInputText] = useState("");
     const [editeMode, setEditeMode] = useState<number | null>(null);
@@ -19,6 +19,7 @@ export default function TodoApp({}: Props) {
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
     const [inputItem, setInputItem] = useState("");
     const [searchFilter, setSearchFilter] = useState(null);
+    const [status, setStatus] = useState(Boolean);
 
     function addTodo(){
         if(inputText.trim() !== ''){
@@ -33,10 +34,12 @@ export default function TodoApp({}: Props) {
                 id: todos.length + 1,
                 tkname: inputText,
                 from: inputDate1,
-                to: inputDate2
+                to: inputDate2,
+                status: "Incomplete"
             };
             setTodos([...todos, newTodo]);
             setInputText("");
+            
         }
     }
 
@@ -56,7 +59,7 @@ export default function TodoApp({}: Props) {
     }
 
     function saveEditedTodo(){
-        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2 }:todo);
+        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2}:todo);
         setTodos(updatedTodos);
         setEditeMode(null);
     }
@@ -108,18 +111,15 @@ export default function TodoApp({}: Props) {
                 todos.map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border-b py-2'>
                         <div className='w-full'>
-                            {isEditedText !== index  && <span className='font-bold '>{todo.tkname}</span>}
+                            {isEditedText !== index  && <span className='bg-gray-200 font-bold border-b'>{todo.tkname}</span>}
                             {searchFilter == index  && <span className='font-bold '>{todo.tkname}</span>}
                             {editeMode === todo.id ? 
-                            <form className='justify-enter items-center'>
-                            
+                            <form className='justify-enter items-center'>                           
                                 <input onChange={(e) => {
                                     setEditedText(e.target.value),
                                     setIsEditedText(index.toString())
                                 }} value={editedText} type="text" 
-                                className='border-gray-300 border rounded-1 px-4 py-2'/>
-                                 
-                                   
+                                className='border-gray-300 border rounded-1 px-4 py-2'/>  
                                 <ul className='py-2'>
                                     <span>From:
                                         <input onChange={(e) => {
@@ -134,13 +134,14 @@ export default function TodoApp({}: Props) {
                                     
                                 </ul>
                                 <button onClick={()=> saveEditedTodo()} className='bg-green-500 text-white px-4 py-2 rounded-r'>Save</button>
-                                <button onClick={()=> cancelEdit()} className='bg-gray-400 text-white px-4 py-2 rounded-r'>X</button>                         
+                                <button onClick={()=> cancelEdit()} className='bg-gray-400 text-white px-4 py-2 rounded-r ml-1'>X</button>                         
                             </form> : 
                             <div className=''>
-                                <ul className='border'>Start: {todo.from}</ul>
-                                <ul className='border'>Deadline: {todo.to}</ul>
-                                <div className='font-bold'>
-                                    <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-2'>Edit</button>
+                                <ul className=''>Start: {todo.from}</ul>
+                                <ul className=''>Deadline: {todo.to}</ul>
+                                <span>Status: <span className={`${todo.status === 'Completed' ? 'text-green-400 ':'text-red-500'} font-bold`}>{todo.status}</span></span>
+                                <div className='flex font-bold border'>
+                                    <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
                                     <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
                                 </div>                                   
                             </div> }
