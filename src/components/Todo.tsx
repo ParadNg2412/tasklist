@@ -7,20 +7,23 @@ type Props = {}
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const [todos, setTodos] = useState([
-        {id:1, text:"Task 1"},
-        {id:2, text:"Task 2"},
-        {id:3, text:"Task 3"}
+        {id:1, tkname:"Task 1", from: "2024/05/03T08:00", to: "2024/05/03T17:00"},
+        {id:2, tkname:"Task 2", from: "2024/05/04T08:00", to: "2024/05/04T17:00"},
+        {id:3, tkname:"Task 3", from: "2024/05/04T08:00", to: "2024/05/04T17:00"}
     ]);
     const [inputText, setInputText] = useState("");
     const [editeMode, setEditeMode] = useState<number | null>(null);
     const [editedText, setEditedText] = useState("");
+    const [inputDate1, setInputDate1] = useState("");
+    const [inputDate2, setInputDate2] = useState("");
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
-    const [searchItem, setSearchItem] = useState("");
-    const [searchFilter, setSearchFilter] = useState<number | null>(null);
+    const [inputItem, setInputItem] = useState("");
+    const [searchFilter, setSearchFilter] = useState(null);
 
     function addTodo(){
         if(inputText.trim() !== ''){
-            const isExistingTodo = todos.some((todo) => todo.text === inputText);
+            const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
+            && todo.from === inputDate1 && todo.to === inputDate2);
             if(isExistingTodo){
                 alert("This Todo already exist!");
                 setInputText("");
@@ -28,7 +31,9 @@ export default function TodoApp({}: Props) {
             }
             const newTodo = {
                 id: todos.length + 1,
-                text: inputText
+                tkname: inputText,
+                from: inputDate1,
+                to: inputDate2
             };
             setTodos([...todos, newTodo]);
             setInputText("");
@@ -44,12 +49,14 @@ export default function TodoApp({}: Props) {
         setEditeMode(id);
         const todoToEdit = todos.find((todo) => todo.id == id);
         if(todoToEdit){
-            setEditedText(todoToEdit.text);
+            setEditedText(todoToEdit.tkname);
+            setInputDate1(todoToEdit.from);
+            setInputDate2(todoToEdit.to);
         }
     }
 
     function saveEditedTodo(){
-        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, text:editedText }:todo);
+        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2 }:todo);
         setTodos(updatedTodos);
         setEditeMode(null);
     }
@@ -59,18 +66,18 @@ export default function TodoApp({}: Props) {
         setIsEditedText(null);
     }
 
-    function searchtask(id: number){
-        setSearchFilter(id);
-        if(searchItem.trim() !== ''){
-            const isExistingTodo = todos.filter((todo) => todo.text === searchItem);
+    function searchtask(){
+        const foundTodo = todos.map((todo) => todo.id === searchFilter ? {...todo, tkname: inputItem}:todo);
+        if(inputItem.trim() !== ''){
+            const isExistingTodo = todos.filter((todo) => todo.tkname === inputItem);
             if(isExistingTodo){
-                console.log(isExistingTodo);
-                setSearchFilter(searchFilter);
-                setSearchItem("");
+                console.log(isExistingTodo); //Ket qua hien ra o Console.log
+                setTodos(foundTodo);
+                setInputItem("");
             }
-            else{
+            else{               
                 alert("Todo does not exist!");
-                setSearchItem("");
+                setInputItem("");
             }
             
         }
@@ -89,9 +96,9 @@ export default function TodoApp({}: Props) {
             placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2'/>
             <button onClick={addTodo} className='bg-blue-500 text-white px-4 py-2 rounded-r'>Add</button>
             <input onChange={(e) => {
-                setSearchItem(e.target.value),
+                setInputItem(e.target.value),
                 setSearchFilter(null)
-            }} value={searchItem} type='text'
+            }} value={inputItem} type='text'
             onKeyDown={(e) => e.which === 13 &&  searchtask()} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
             <button onClick={()=>searchtask()} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
         </div>
@@ -101,7 +108,8 @@ export default function TodoApp({}: Props) {
                 todos.map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border-b py-2'>
                         <div className='w-full'>
-                            {isEditedText !== index  && <span className='font-bold '>{todo.text}</span>}
+                            {isEditedText !== index  && <span className='font-bold '>{todo.tkname}</span>}
+                            {searchFilter == index  && <span className='font-bold '>{todo.tkname}</span>}
                             {editeMode === todo.id ? 
                             <form className='justify-enter items-center'>
                             
@@ -110,13 +118,31 @@ export default function TodoApp({}: Props) {
                                     setIsEditedText(index.toString())
                                 }} value={editedText} type="text" 
                                 className='border-gray-300 border rounded-1 px-4 py-2'/>
+                                 
+                                   
+                                <ul className='py-2'>
+                                    <span>From:
+                                        <input onChange={(e) => {
+                                            setInputDate1(e.target.value),
+                                            setIsEditedText(index.toString())
+                                        }} value={inputDate1} type="datetime-local" className='bg-white-300 border rounded-1 px-2 py-2 ml-2'></input> - 
+                                        To: <input onChange={(e) => {
+                                            setInputDate2(e.target.value),
+                                            setIsEditedText(index.toString())
+                                        }} value={inputDate2} type="datetime-local" className='bg-white-300 border rounded-1 px-2 py-2 ml-2'></input>
+                                    </span>
+                                    
+                                </ul>
                                 <button onClick={()=> saveEditedTodo()} className='bg-green-500 text-white px-4 py-2 rounded-r'>Save</button>
-                                <button onClick={()=> cancelEdit()} className='bg-gray-400 text-white px-4 py-2 rounded-r'>X</button>                              
+                                <button onClick={()=> cancelEdit()} className='bg-gray-400 text-white px-4 py-2 rounded-r'>X</button>                         
                             </form> : 
                             <div className=''>
-                            <span>Deadline: </span>
-                                <button onClick={() => editTodo(todo.id)} className='text-green-500 m-2 ml-40'>Edit</button>
-                                <button onClick={() => delTodo(todo.id)} className='text-red-500'>Delete</button>
+                                <ul className='border'>Start: {todo.from}</ul>
+                                <ul className='border'>Deadline: {todo.to}</ul>
+                                <div className='font-bold'>
+                                    <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-2'>Edit</button>
+                                    <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
+                                </div>                                   
                             </div> }
                             
                         </div>  
