@@ -146,7 +146,7 @@ export default function TodoApp({}: Props) {
                                     <span  className={`${todo.stt === 'Completed' ? 'text-green-400 ':'text-red-500'} font-bold ml-1`}>{todo.stt}</span>
                                 </span>
                                 <button onClick={updateStt} className={`${todo.stt === 'Completed' ? 'hidden' : 'enabled'}
-                                 bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Commit</button>
+                                 bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Commit </button>
                                 <div className='flex font-bold border'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
                                     <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
