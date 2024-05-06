@@ -7,9 +7,9 @@ type Props = {}
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const [todos, setTodos] = useState([
-        {id:1, tkname:"Todo web Layout", from: "2024/05/03T09:00", to: "2024/05/03T17:00", status: "Completed"},
-        {id:2, tkname:"Simple CRUD functions", from: "2024/05/03T08:00", to: "2024/05/03T17:00", status: "Completed"},
-        {id:3, tkname:"Datetime layout for each task", from: "2024/05/06T08:00", to: "2024/05/06T17:00"}
+        {id:1, tkname:"Todo web Layout", from: "2024/05/03T09:00", to: "2024/05/03T17:00", stt: "Completed"},
+        {id:2, tkname:"Simple CRUD functions", from: "2024/05/03T08:00", to: "2024/05/03T17:00", stt: "Completed"},
+        {id:3, tkname:"Datetime layout for each task", from: "2024/05/06T08:00", to: "2024/05/06T17:00", stt: "Completed"}
     ]);
     const [inputText, setInputText] = useState("");
     const [editeMode, setEditeMode] = useState<number | null>(null);
@@ -35,7 +35,7 @@ export default function TodoApp({}: Props) {
                 tkname: inputText,
                 from: inputDate1,
                 to: inputDate2,
-                status: "Incomplete"
+                stt: "Incomplete" //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh" 
             };
             setTodos([...todos, newTodo]);
             setInputText("");
@@ -86,6 +86,10 @@ export default function TodoApp({}: Props) {
         }
     }
 
+    function updateStt() {
+        
+    }
+
   return (
     <div className=''>
         <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
@@ -112,7 +116,7 @@ export default function TodoApp({}: Props) {
                     <li key={todo.id} className='flex item-center justify-between border-b py-2'>
                         <div className='w-full'>
                             {isEditedText !== index  && <span className='bg-gray-200 font-bold border-b'>{todo.tkname}</span>}
-                            {searchFilter == index  && <span className='font-bold '>{todo.tkname}</span>}
+                            {/* {searchFilter == index  && <span className='font-bold '>{todo.tkname}</span>} */}
                             {editeMode === todo.id ? 
                             <form className='justify-enter items-center'>                           
                                 <input onChange={(e) => {
@@ -130,8 +134,7 @@ export default function TodoApp({}: Props) {
                                             setInputDate2(e.target.value),
                                             setIsEditedText(index.toString())
                                         }} value={inputDate2} type="datetime-local" className='bg-white-300 border rounded-1 px-2 py-2 ml-2'></input>
-                                    </span>
-                                    
+                                    </span>                                    
                                 </ul>
                                 <button onClick={()=> saveEditedTodo()} className='bg-green-500 text-white px-4 py-2 rounded-r'>Save</button>
                                 <button onClick={()=> cancelEdit()} className='bg-gray-400 text-white px-4 py-2 rounded-r ml-1'>X</button>                         
@@ -139,7 +142,11 @@ export default function TodoApp({}: Props) {
                             <div className=''>
                                 <ul className=''>Start: {todo.from}</ul>
                                 <ul className=''>Deadline: {todo.to}</ul>
-                                <span>Status: <span className={`${todo.status === 'Completed' ? 'text-green-400 ':'text-red-500'} font-bold`}>{todo.status}</span></span>
+                                <span>Status: 
+                                    <span  className={`${todo.stt === 'Completed' ? 'text-green-400 ':'text-red-500'} font-bold ml-1`}>{todo.stt}</span>
+                                </span>
+                                <button onClick={updateStt} className={`${todo.stt === 'Completed' ? 'hidden' : 'Incomplete'}
+                                 bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Commit</button>
                                 <div className='flex font-bold border'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
                                     <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
