@@ -1,15 +1,19 @@
 'use client'
 import React, { useRef, useState } from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
+import moment from 'moment';
+
+moment().format();
+
 
 type Props = {}
 
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const [todos, setTodos] = useState([
-        {id:1, tkname:"Todo web Layout", from: "2024/05/03T09:00", to: "2024/05/03T17:00", stt: "Completed"},
-        {id:2, tkname:"Simple CRUD functions", from: "2024/05/03T08:00", to: "2024/05/03T17:00", stt: "Completed"},
-        {id:3, tkname:"Datetime layout for each task", from: "2024/05/06T08:00", to: "2024/05/06T17:00", stt: "Completed"}
+        {id:1, tkname:"Todo web Layout", from: "2024/05/03T09:00", to: "2024/05/03T17:00", stt: "Completed", duration: 0},
+        {id:2, tkname:"Simple CRUD functions", from: "2024/05/03T08:00", to: "2024/05/03T17:00", stt: "Completed", duration: 0},
+        {id:3, tkname:"Datetime layout for each task", from: "2024/05/06T08:00", to: "2024/05/06T17:00", stt: "Completed", duration: 0}
     ]);
     const [inputText, setInputText] = useState("");
     const [editeMode, setEditeMode] = useState<number | null>(null);
@@ -19,6 +23,7 @@ export default function TodoApp({}: Props) {
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
     const [inputItem, setInputItem] = useState("");
     const [searchFilter, setSearchFilter] = useState(null);
+    
 
     function addTodo(){
         if(inputText.trim() !== ''){
@@ -29,13 +34,18 @@ export default function TodoApp({}: Props) {
                 setInputText("");
                 return;
             }
+            
+            
             const newTodo = {
                 id: todos.length + 1,
                 tkname: inputText,
                 from: inputDate1,
                 to: inputDate2,
-                stt: "Incomplete" //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh" 
+                stt: "Incomplete" , //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh"
+                duration: 0  
             };
+            
+                // $('.countdown').text(moment(countdown).format('h:mm:ss'))
             setTodos([...todos, newTodo]);
             setInputText("");
             
@@ -58,7 +68,14 @@ export default function TodoApp({}: Props) {
     }
 
     function saveEditedTodo(){
-        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2}:todo);
+        
+        const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
+        const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
+        const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
+        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss }:todo);
+              
+        //console.log('123', hh + ':' + mm + ':' + ss);
+
         setTodos(updatedTodos);
         setEditeMode(null);
     }
@@ -74,7 +91,7 @@ export default function TodoApp({}: Props) {
             const isExistingTodo = todos.filter((todo) => todo.tkname === inputItem);
             if(isExistingTodo){
                 console.log(isExistingTodo); //Ket qua hien ra o Console.log
-                // setTodos(foundTodo);
+                setTodos(foundTodo);
                 setInputItem("");
             }
             else{               
@@ -144,11 +161,12 @@ export default function TodoApp({}: Props) {
                             <div className=''>
                                 <ul className=''>Start: {todo.from}</ul>
                                 <ul className=''>Deadline: {todo.to}</ul>
+                                <ul>Duration: {todo.duration}</ul>
                                 <span>Status: 
                                     <span  className={`${todo.stt === 'Completed' ? 'text-green-400 ':'text-red-500'} font-bold ml-1`}>{todo.stt}</span>
                                 </span>
                                 <button onClick={() => updateStt(todo.id)} className={`${todo.stt === 'Completed' ? 'hidden' : 'enabled'}
-                                 bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Commit </button>
+                                 bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Submit</button>
                                 <div className='flex font-bold border'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
                                     <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
