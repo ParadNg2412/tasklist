@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
 
+
 moment().format();
 
 
@@ -22,9 +23,9 @@ export default function TodoApp({}: Props) {
     const [inputDate2, setInputDate2] = useState("");
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
     const [inputItem, setInputItem] = useState("");
-    const [searchFilter, setSearchFilter] = useState(null);
     
-
+    
+    
     function addTodo(){
         if(inputText.trim() !== ''){
             const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
@@ -34,8 +35,6 @@ export default function TodoApp({}: Props) {
                 setInputText("");
                 return;
             }
-            
-            
             const newTodo = {
                 id: todos.length + 1,
                 tkname: inputText,
@@ -45,10 +44,9 @@ export default function TodoApp({}: Props) {
                 duration: 0  
             };
             
-                // $('.countdown').text(moment(countdown).format('h:mm:ss'))
+            // $('.countdown').text(moment(countdown).format('h:mm:ss'))
             setTodos([...todos, newTodo]);
             setInputText("");
-            
         }
     }
 
@@ -85,21 +83,32 @@ export default function TodoApp({}: Props) {
         setIsEditedText(null);
     }
 
-    function searchtask(){
-        const foundTodo = todos.map((todo) => todo.id === searchFilter ? {...todo, tkname: inputItem}:todo);
-        if(inputItem.trim() !== ''){
-            const isExistingTodo = todos.filter((todo) => todo.tkname === inputItem);
-            if(isExistingTodo){
-                console.log(isExistingTodo); //Ket qua hien ra o Console.log
-                setTodos(foundTodo);
-                setInputItem("");
-            }
-            else{               
-                alert("Todo does not exist!");
-                setInputItem("");
+    function searchTodo(){
+        // const foundTodo = todos.map((todo) => todo.id === searchFilter ? {...todo, tkname: inputItem}:todo);
+        // if(inputItem.trim() !== ''){
+        //     const isExistingTodo = todos.filter((todo) => todo.tkname === inputItem);
+        //     if(isExistingTodo){
+        //         console.log(isExistingTodo); //Ket qua hien ra o Console.log
+        //         setTodos(foundTodo);
+        //         setInputItem("");
+        //     }
+        //     else{               
+        //         alert("Todo does not exist!");
+        //         setInputItem("");
+        //     }
+        // }
+
+        if(inputItem === ""){
+            setTodos([...todos]);          
+            return;
+        }
+        const filterSearch = todos.filter((item) => {
+            if(item.tkname.toLowerCase().includes(inputItem.toLowerCase())){
+                return item;
             }
             
-        }
+        })
+        setTodos(filterSearch);
     }
 
     function updateStt(id: number) {
@@ -121,21 +130,19 @@ export default function TodoApp({}: Props) {
             onKeyDown={(e) => e.which === 13 &&  addTodo()}
             placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2'/>
             <button onClick={addTodo} className='bg-blue-500 text-white px-4 py-2 rounded-r'>Add</button>
-            <input onChange={(e) => {
-                setInputItem(e.target.value),
-                setSearchFilter(null)
-            }} value={inputItem} type='text'
-            onKeyDown={(e) => e.which === 13 &&  searchtask()} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
-            <button onClick={()=>searchtask()} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
+            <input onChange={(e) => {setInputItem(e.target.value)}} value={inputItem} type='text'
+            onKeyDown={(e) => e.which === 13 &&  searchTodo()} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
+            <button onClick={searchTodo} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
+            
         </div>
         
         <ul ref={animationParent}>
             {
                 todos.map( (todo, index) => (
-                    <li key={todo.id} className='flex item-center justify-between border-b py-2'>
-                        <div className='w-full'>
+                    <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
+                        <div className='w-full ml-3'>
                             {isEditedText !== index  && <span className='bg-gray-200 font-bold border-b'>{todo.tkname}</span>}
-                            {/* {searchFilter == index  && <span className='font-bold '>{todo.tkname}</span>} */}
+                            
                             {editeMode === todo.id ? 
                             <form className='justify-enter items-center'>                           
                                 <input onChange={(e) => {
