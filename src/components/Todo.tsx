@@ -3,10 +3,6 @@ import React, { useRef, useState } from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
 
-
-moment().format();
-
-
 type Props = {}
 
 export default function TodoApp({}: Props) {
@@ -23,8 +19,6 @@ export default function TodoApp({}: Props) {
     const [inputDate2, setInputDate2] = useState("");
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
     const [inputItem, setInputItem] = useState("");
-    const [searchMode, setSearchMode] = useState<number | null>(null);
-    // const [sorted, setSorted] = useState({sorted: "id", reversed: false});
     
     function addTodo(){
         if(inputText.trim() !== ''){
@@ -71,9 +65,6 @@ export default function TodoApp({}: Props) {
         const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
         const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
         const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss }:todo);
-              
-        //console.log('123', hh + ':' + mm + ':' + ss);
-
         setTodos(updatedTodos);
         setEditeMode(null);
     }
@@ -84,30 +75,14 @@ export default function TodoApp({}: Props) {
     }
 
     function searchTodo(){
-        // const foundTodo = todos.map((todo) => todo.id === searchFilter ? {...todo, tkname: inputItem}:todo);
-        // if(inputItem.trim() !== ''){
-        //     const isExistingTodo = todos.filter((todo) => todo.tkname === inputItem);
-        //     if(isExistingTodo){
-        //         console.log(isExistingTodo); //Ket qua hien ra o Console.log
-        //         setTodos(foundTodo);
-        //         setInputItem("");
-        //     }
-        //     else{               
-        //         alert("Todo does not exist!");
-        //         setInputItem("");
-        //     }
-        // }
-
         if(inputItem === ""){
-            setTodos([...todos]); 
-                 
+            setTodos([...todos]);                  
             return;
         }
         const filterSearch = todos.filter((item) => {
             if(item.tkname.toLowerCase().includes(inputItem.toLowerCase())){
                 return item;
-            }
-            
+            }           
         })
         setTodos(filterSearch);
         setInputItem("")   ; 
