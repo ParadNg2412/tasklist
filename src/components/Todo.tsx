@@ -95,9 +95,13 @@ export default function TodoApp({}: Props) {
         setTodos([...todos]);
     }
 
-    function sortbydate() {
+    function sortbydate(ascend: boolean) {
+        // const sortedTask = [...todos].sort((a, b) => {
+        //     return new Date(a.from).getTime() - new Date(b.from).getTime();
+        // });
+        // setTodos(sortedTask);
         const sortedTask = [...todos].sort((a, b) => {
-            return new Date(a.from).getTime() - new Date(b.from).getTime();
+            return ascend ? new Date(a.from).getTime() - new Date(b.from).getTime() : new Date(b.from).getTime() - new Date(a.from).getTime();
         });
         setTodos(sortedTask);
     }
@@ -115,7 +119,7 @@ export default function TodoApp({}: Props) {
         <h3 className='text-2xl mb-4'>Task management</h3>
         <div className='mb-5'>
             <input onChange={(e) => {
-                setInputText(e.target.value)
+                setInputText(e.target.value), 
                 setIsEditedText(null)
             }} value={inputText} type='text' 
             onKeyDown={(e) => e.which === 13 &&  addTodo()}
@@ -126,8 +130,12 @@ export default function TodoApp({}: Props) {
             <button onClick={searchTodo} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
         </div>
         <div className='mb-5'>
-            <button onClick={sortbydate} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Sort by date</button>
-            <button onClick={sortbystatus} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-2'>Sort by status</button>
+            <span>
+                <span className='font-bold mr-2'>Sort by date:</span>
+                <button onClick={() => sortbydate(true)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold'>Ascend</button>
+                <button onClick={() => sortbydate(false)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold ml-2'>Descend</button>
+            </span>           
+            <button onClick={sortbystatus} className='bg-gray-300 text-black px-4 py-2 rounded-r font-bold ml-6'>Sort by status</button>
         </div>
         
         <ul ref={animationParent}>
@@ -135,8 +143,7 @@ export default function TodoApp({}: Props) {
                 todos.map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
                         <div className='w-full ml-3'>
-                            {isEditedText !== index  && <span className='bg-gray-200 font-bold border-b'>{todo.tkname}</span>}
-                            
+                            {isEditedText !== index  && <span className='bg-gray-200 font-bold border-b'>{todo.tkname}</span>}                           
                             {editeMode === todo.id ? 
                             <form className='justify-enter items-center'>                           
                                 <input onChange={(e) => {
