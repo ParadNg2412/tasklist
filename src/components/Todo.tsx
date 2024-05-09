@@ -8,9 +8,9 @@ type Props = {}
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const [todos, setTodos] = useState([
-        {id:1, tkname:"Todo web Layout", from: "2024/05/03T09:00", to: "2024/05/03T17:00", completed: true, duration: 0},
-        {id:2, tkname:"Simple CRUD functions", from: "2024/05/03T08:00", to: "2024/05/03T17:00", completed: true, duration: 0},
-        {id:3, tkname:"Datetime layout for each task", from: "2024/05/06T08:00", to: "2024/05/06T17:00", completed: true, duration: 0}
+        {id:1, tkname:"Todo web Layout", from: "2024-05-03T09:00", to: "2024-05-03T17:00", completed: true, duration: 0},
+        {id:2, tkname:"Simple CRUD functions", from: "2024-05-04T08:00", to: "2024-05-04T17:00", completed: true, duration: 0},
+        {id:3, tkname:"Datetime layout for each task", from: "2024-05-02T08:00", to: "2024-05-02T17:00", completed: false, duration: 0}
     ]);
     const [inputText, setInputText] = useState("");
     const [editeMode, setEditeMode] = useState<number | null>(null);
@@ -64,7 +64,7 @@ export default function TodoApp({}: Props) {
         const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
         const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
         const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
-        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss }:todo);
+        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss}:todo);
         setTodos(updatedTodos);
         setEditeMode(null);
     }
@@ -95,6 +95,20 @@ export default function TodoApp({}: Props) {
         setTodos([...todos]);
     }
 
+    function sortbydate() {
+        const sortedTask = [...todos].sort((a, b) => {
+            return new Date(a.from).getTime() - new Date(b.from).getTime();
+        });
+        setTodos(sortedTask);
+    }
+
+    function sortbystatus() {
+        const sortedTask = [...todos].sort((a, b) => {
+            return a.completed === b.completed ? 0 : a.completed ? -1 : -1;
+        });
+        setTodos(sortedTask);
+    }
+
   return (
     <div className=''>
         <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
@@ -110,6 +124,10 @@ export default function TodoApp({}: Props) {
             <input onChange={(e) => {setInputItem(e.target.value)}} value={inputItem} type='text'  
             onKeyDown={(e) => e.which === 13 &&  searchTodo()} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
             <button onClick={searchTodo} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
+        </div>
+        <div className='mb-5'>
+            <button onClick={sortbydate} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Sort by date</button>
+            <button onClick={sortbystatus} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-2'>Sort by status</button>
         </div>
         
         <ul ref={animationParent}>
