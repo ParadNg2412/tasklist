@@ -3,9 +3,9 @@ import axios from 'axios';
 
 
 const app = express;
-const port = 3000;
+const port = 3001;
 
-app.get('/tasks', async (req: Request, res: Response) => {
+app.get('/Todo', async (req: Request, res: Response) => {
     try{
         const Response = await axios.get('https//example.com/api/tasks');
         res.json(Response.data);
