@@ -76,16 +76,16 @@ export default function TodoApp({}: Props) {
         setIsEditedText(null);
     }
 
-    
+    const [searchResult, setSearchResult] = useState([] as typeof init);
     function searchTodo(){
         
         // if(inputItem === ""){
-        //     //setTodos([...todos]);                  
+        //     setTodos(init);                  
         //     return;
         // }
         // const filterSearch = todos.filter((item) => {
         //     if(item.tkname.toLowerCase().includes(inputItem.toLowerCase())){
-        //         setTodos([...todos]);
+                
         //         return item;
         //     }           
         // })
@@ -93,20 +93,22 @@ export default function TodoApp({}: Props) {
         // setInputItem(""); 
 
         const term = inputItem.toLowerCase();
-        if(term === ''){
-            setTodos(init);
+        if(term === ""){
+            setSearchResult([]);
         }
         else{
-            const foundTodo = init.filter(todos => todos.tkname.toLowerCase().includes(term));
-            setTodos(foundTodo);
-            setInputItem("");
+            const foundTodo = todos.filter((todo) => todo.tkname.toLowerCase().includes(term));
+            setSearchResult(foundTodo);
+            
         }
+
         
     }
 
     function cancelSearch(){
         setInputItem("");
-        setTodos(init);
+        setSearchResult([]);
+        
     }
 
     function updateStt(id: number) {
@@ -151,20 +153,21 @@ export default function TodoApp({}: Props) {
             <input onChange={(e) => {setInputItem(e.target.value)}} value={inputItem} type='text'  
             onKeyDown={(e) => e.which === 13 &&  searchTodo()} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
             <button onClick={() => searchTodo()} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
-            <button onClick={() => cancelSearch()} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-1'>Cancel</button>
+            {inputItem && <button onClick={() => cancelSearch()} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-1'>Cancel</button>}
+            
         </div>
         <div className='mb-5'>
             <span>
                 <span className='font-bold mr-2'>Sort by date:</span>
                 <button onClick={() => sortbydate(true)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold'>Ascend</button>
-                <button onClick={() => sortbydate(false)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold ml-2'>Descend</button>
+                <button onClick={() => sortbydate(false)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold ml-1'>Descend</button>
             </span>           
             <button onClick={sortbystatus} className='bg-gray-300 text-black px-4 py-2 rounded-r font-bold ml-6'>Sort by status</button>
         </div>
         
         <ul ref={animationParent}>
             {
-                todos.map( (todo, index) => (
+                (inputItem ? searchResult : todos).map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
                         <div className='w-full ml-3'>
                             {isEditedText !== index  && <span className='bg-gray-200 font-bold border-b'>{todo.tkname}</span>}                           
