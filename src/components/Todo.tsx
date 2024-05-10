@@ -3,18 +3,21 @@ import React, { useRef, useState , useEffect} from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
 
+
+moment().format('MMMM Do YYYY h:mm:ss a')
+
 type Props = {}
 
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const init = [
-        {id:1, tkname:"Todo web Layout", from: "2024-05-03T09:00", to: "2024-05-03T17:00", completed: true, duration: 0},
-        {id:2, tkname:"Simple CRUD functions", from: "2024-05-04T08:00", to: "2024-05-04T17:00", completed: true, duration: 0},
-        {id:3, tkname:"Datetime layout for each task", from: "2024-05-02T08:00", to: "2024-05-02T17:00", completed: false, duration: 0}
+        {id:1, tkname:"Todo web Layout", from: "2024-05-03 09:00", to: "2024-05-03 17:00", completed: true, duration: '9:0:0'},
+        {id:2, tkname:"Simple CRUD functions", from: "2024-05-04 08:00", to: "2024-05-04 17:00", completed: true, duration: '9:0:0'},
+        {id:3, tkname:"Datetime layout for each task", from: "2024-05-02 08:00", to: "2024-05-02 17:00", completed: false, duration: '9:0:0'}
     ]
     const [todos, setTodos] = useState(init);
     const [inputText, setInputText] = useState("");
-    const [editeMode, setEditeMode] = useState<number | null>(null);
+    const [editeMode, setEditeMode] = useState<number| null>(null);
     const [editedText, setEditedText] = useState("");
     const [inputDate1, setInputDate1] = useState("");
     const [inputDate2, setInputDate2] = useState("");
@@ -24,32 +27,34 @@ export default function TodoApp({}: Props) {
     
     function addTodo(){
         if(inputText.trim() !== ''){
-            const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
-            && todo.from === inputDate1 && todo.to === inputDate2);
-            if(isExistingTodo){
-                alert("This Todo already exist!");
-                setInputText("");
-                return;
-            }
+            // const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
+            // && todo.from === inputDate1 && todo.to === inputDate2);
+            // if(isExistingTodo){
+            //     alert("This Todo already exist!");
+            //     setInputText("");
+            //    return;
             const newTodo = {
                 id: todos.length + 1,
                 tkname: inputText,
-                from: inputDate1,
-                to: inputDate2,
+                from: "none",
+                to: "none",
                 completed: false , //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh"
-                duration: 0  
+                duration: '0:0:0'  
             };
-            
-            // $('.countdown').text(moment(countdown).format('h:mm:ss'))
             setTodos([...todos, newTodo]);
             setInputText("");
         }
     }
 
-    function delTodo(id: number){
-        const updatedTodos = todos.filter((todo) => todo.id !== id);
-        setTodos(updatedTodos);
-    }
+    const [deleteTodo, setDeleteTodo] = useState(null);
+
+    // function delTodo(id: number){
+    //     const updatedTodos = todos.filter((todo) => todo.id !== id);
+    //     setTodos(updatedTodos);
+    // }
+
+    
+    
 
     function editTodo(id: number){
         setEditeMode(id);
@@ -59,16 +64,23 @@ export default function TodoApp({}: Props) {
             setInputDate1(todoToEdit.from);
             setInputDate2(todoToEdit.to);
         }
+        
     }
 
     function saveEditedTodo(){
+        if(editedText.trim() === ''){
+            alert("Warning: Todo's name cannot be empty! Please input Todo's name")
+            return;
+        }
+        else{
+            const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
+            const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
+            const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
+            const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss}:todo);
+            setTodos(updatedTodos);
+            setEditeMode(null);
+        }
         
-        const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
-        const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
-        const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
-        const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss}:todo);
-        setTodos(updatedTodos);
-        setEditeMode(null);
     }
 
     function cancelEdit(){       
@@ -78,19 +90,6 @@ export default function TodoApp({}: Props) {
 
     const [searchResult, setSearchResult] = useState([] as typeof init);
     function searchTodo(){
-        
-        // if(inputItem === ""){
-        //     setTodos(init);                  
-        //     return;
-        // }
-        // const filterSearch = todos.filter((item) => {
-        //     if(item.tkname.toLowerCase().includes(inputItem.toLowerCase())){
-                
-        //         return item;
-        //     }           
-        // })
-        // setTodos(filterSearch);
-        // setInputItem(""); 
 
         const term = inputItem.toLowerCase();
         if(term === ""){
@@ -98,17 +97,13 @@ export default function TodoApp({}: Props) {
         }
         else{
             const foundTodo = todos.filter((todo) => todo.tkname.toLowerCase().includes(term));
-            setSearchResult(foundTodo);
-            
-        }
-
-        
+            setSearchResult(foundTodo);          
+        }       
     }
 
     function cancelSearch(){
         setInputItem("");
-        setSearchResult([]);
-        
+        setSearchResult([]);       
     }
 
     function updateStt(id: number) {
@@ -117,6 +112,34 @@ export default function TodoApp({}: Props) {
         todos[index]["completed"] = updateStatus;
         setTodos([...todos]);
     }
+
+
+    // const [completedTodo, setCompletedTodo] = useState(null);
+    // function CompleteTodo(){
+    //     const updatedTodos = todos.map(todo => {
+    //         if(todo.id === completedTodo){
+    //             return {...todos, completed: true};
+    //         }
+    //         return todo;
+    //     });
+    //     setTodos(updatedTodos);
+    //     setCompletedTodo(null);
+    // }
+
+    // function revertedTodo() {
+    //     const updatedTodos = todos.map(todo => {
+    //         if(todo.id === completedTodo){
+    //             return {...todos, completed: false};
+    //         }
+    //         return todo;
+    //     });
+    //     setTodos(updatedTodos);
+    //     setCompletedTodo(null);
+    // }
+
+    // function confirmCompletedTodo(id: number){
+    //     setCompletedTodo(id);
+    // }
 
     function sortbydate(ascend: boolean) {
         // const sortedTask = [...todos].sort((a, b) => {
@@ -129,11 +152,21 @@ export default function TodoApp({}: Props) {
         setTodos(sortedTask);
     }
 
-    function sortbystatus() {
-        const sortedTask = [...todos].sort((a, b) => {
-            return a.completed === b.completed ? 0 : a.completed ? -1 : -1;
-        });
-        setTodos(sortedTask);
+      
+    function sortbystatus(completedStatus: boolean | null) {
+        // const sortedTask = [...todos].sort((a, b) => {
+        //     return a.completed === b.completed ? 0 : a.completed ? -1 : -1;
+        // });
+        // setTodos(sortedTask);
+        let updatedTodos = [...todos];
+        
+        if(completedStatus === null){
+            setTodos([...todos]);
+        }
+        else{
+            const sortedTodo = [...todos].filter(todo => todo.completed === completedStatus);
+            setTodos(sortedTodo);
+        }
     }
 
 
@@ -150,8 +183,8 @@ export default function TodoApp({}: Props) {
             placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2'/>
 
             <button onClick={addTodo} className='bg-blue-500 text-white px-4 py-2 rounded-r'>Add</button>
-            <input onChange={(e) => {setInputItem(e.target.value)}} value={inputItem} type='text'  
-            onKeyDown={(e) => e.which === 13 &&  searchTodo()} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
+            <input onChange={(e) => {setInputItem(e.target.value)}} value={inputItem} type='text' //onKeyDown={(e) => e.which === 13 &&  searchTodo()} 
+             placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
             <button onClick={() => searchTodo()} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
             {inputItem && <button onClick={() => cancelSearch()} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-1'>Cancel</button>}
             
@@ -161,8 +194,14 @@ export default function TodoApp({}: Props) {
                 <span className='font-bold mr-2'>Sort by date:</span>
                 <button onClick={() => sortbydate(true)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold'>Ascend</button>
                 <button onClick={() => sortbydate(false)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold ml-1'>Descend</button>
+            </span>
+            <span>
+            <span className='font-bold mr-2 ml-6'>Sort by status:</span>
+                <button onClick={() => sortbystatus(null)} className='bg-gray-400 text-black px-4 py-2 rounded-r font-bold ml-2'>All</button>
+                <button onClick={() => sortbystatus(true)} className='bg-green-500 text-white px-4 py-2 rounded-r font-bold ml-2'>Completed</button>
+                <button onClick={() => sortbystatus(false)} className='bg-red-500 text-white px-4 py-2 rounded-r font-bold ml-2'>Incomplete</button>
             </span>           
-            <button onClick={sortbystatus} className='bg-gray-300 text-black px-4 py-2 rounded-r font-bold ml-6'>Sort by status</button>
+            
         </div>
         
         <ul ref={animationParent}>
@@ -170,7 +209,7 @@ export default function TodoApp({}: Props) {
                 (inputItem ? searchResult : todos).map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
                         <div className='w-full ml-3'>
-                            {isEditedText !== index  && <span className='bg-gray-200 font-bold border-b'>{todo.tkname}</span>}                           
+                            {isEditedText !== index  && <span className='text-2xl font-bold border-b'>{todo.tkname}</span>}                           
                             {editeMode === todo.id ? 
                             <form className='justify-enter items-center'>                           
                                 <input onChange={(e) => {
@@ -194,19 +233,22 @@ export default function TodoApp({}: Props) {
                                 <button onClick={()=> cancelEdit()} className='bg-gray-400 text-white px-4 py-2 rounded-r ml-1'>X</button>                         
                             </form> : 
                             <div className=''>
-                                <ul className=''>Start: {todo.from}</ul>
-                                <ul className=''>Deadline: {todo.to}</ul>
+                                <ul className=''>Start: {(moment(todo.from).format("YYYY-MM-DD HH:mm"))}</ul>
+                                <ul className=''>Deadline: {(moment(todo.to).format("YYYY-MM-DD HH:mm"))}</ul>
                                 <ul>Duration: {todo.duration}</ul>
                                 <span>Status: 
                                     <span className={`${todo.completed === true ? 'text-green-400':'text-red-500'} font-bold ml-1`}>
                                         {`${todo.completed === true ? "Completed" : "Incomplete"}`}
                                     </span>
                                 </span>
-                                <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'enable' : 'false'}
+                                <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'hidden' : 'false'}
                                  bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Submit</button>
-                                <div className='flex font-bold border'>
+                                 <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'enable' : 'hidden'}
+                                 bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Revert</button>
+                                 
+                                <div className='flex font-bold border mt-2'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
-                                    <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
+                                    <button  className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
                                 </div>                                   
                             </div> }
                             
