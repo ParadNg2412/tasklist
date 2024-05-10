@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState , useEffect} from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
 
@@ -7,11 +7,12 @@ type Props = {}
 
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
-    const [todos, setTodos] = useState([
+    const init = [
         {id:1, tkname:"Todo web Layout", from: "2024-05-03T09:00", to: "2024-05-03T17:00", completed: true, duration: 0},
         {id:2, tkname:"Simple CRUD functions", from: "2024-05-04T08:00", to: "2024-05-04T17:00", completed: true, duration: 0},
         {id:3, tkname:"Datetime layout for each task", from: "2024-05-02T08:00", to: "2024-05-02T17:00", completed: false, duration: 0}
-    ]);
+    ]
+    const [todos, setTodos] = useState(init);
     const [inputText, setInputText] = useState("");
     const [editeMode, setEditeMode] = useState<number | null>(null);
     const [editedText, setEditedText] = useState("");
@@ -19,6 +20,7 @@ export default function TodoApp({}: Props) {
     const [inputDate2, setInputDate2] = useState("");
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
     const [inputItem, setInputItem] = useState("");
+    
     
     function addTodo(){
         if(inputText.trim() !== ''){
@@ -74,18 +76,37 @@ export default function TodoApp({}: Props) {
         setIsEditedText(null);
     }
 
+    
     function searchTodo(){
-        if(inputItem === ""){
-            setTodos([...todos]);                  
-            return;
+        
+        // if(inputItem === ""){
+        //     //setTodos([...todos]);                  
+        //     return;
+        // }
+        // const filterSearch = todos.filter((item) => {
+        //     if(item.tkname.toLowerCase().includes(inputItem.toLowerCase())){
+        //         setTodos([...todos]);
+        //         return item;
+        //     }           
+        // })
+        // setTodos(filterSearch);
+        // setInputItem(""); 
+
+        const term = inputItem.toLowerCase();
+        if(term === ''){
+            setTodos(init);
         }
-        const filterSearch = todos.filter((item) => {
-            if(item.tkname.toLowerCase().includes(inputItem.toLowerCase())){
-                return item;
-            }           
-        })
-        setTodos(filterSearch);
-        setInputItem("")   ; 
+        else{
+            const foundTodo = init.filter(todos => todos.tkname.toLowerCase().includes(term));
+            setTodos(foundTodo);
+            setInputItem("");
+        }
+        
+    }
+
+    function cancelSearch(){
+        setInputItem("");
+        setTodos(init);
     }
 
     function updateStt(id: number) {
@@ -113,6 +134,7 @@ export default function TodoApp({}: Props) {
         setTodos(sortedTask);
     }
 
+
   return (
     <div className=''>
         <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
@@ -124,10 +146,12 @@ export default function TodoApp({}: Props) {
             }} value={inputText} type='text' 
             onKeyDown={(e) => e.which === 13 &&  addTodo()}
             placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2'/>
+
             <button onClick={addTodo} className='bg-blue-500 text-white px-4 py-2 rounded-r'>Add</button>
             <input onChange={(e) => {setInputItem(e.target.value)}} value={inputItem} type='text'  
             onKeyDown={(e) => e.which === 13 &&  searchTodo()} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
-            <button onClick={searchTodo} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
+            <button onClick={() => searchTodo()} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
+            <button onClick={() => cancelSearch()} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-1'>Cancel</button>
         </div>
         <div className='mb-5'>
             <span>
@@ -175,7 +199,7 @@ export default function TodoApp({}: Props) {
                                         {`${todo.completed === true ? "Completed" : "Incomplete"}`}
                                     </span>
                                 </span>
-                                <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'hidden' : 'false'}
+                                <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'enable' : 'false'}
                                  bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Submit</button>
                                 <div className='flex font-bold border'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
