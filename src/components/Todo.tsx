@@ -2,6 +2,7 @@
 import React, { useRef, useState , useEffect} from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
+import Popup from 'reactjs-popup';
 
 
 // moment().format('MMMM Do YYYY h:mm:ss a')
@@ -60,13 +61,6 @@ export default function TodoApp({}: Props) {
     function cancelDel() {
         setDeleteTodo(null);
     }
-    
-    // function delTodo(id: number){
-    //     const updatedTodos = todos.filter((todo) => todo.id !== id);
-    //     setTodos(updatedTodos);
-    // }
-
-    
     
 
     function editTodo(id: number){
@@ -127,57 +121,21 @@ export default function TodoApp({}: Props) {
     }
 
 
-    // const [completedTodo, setCompletedTodo] = useState(null);
-    // function CompleteTodo(){
-    //     const updatedTodos = todos.map(todo => {
-    //         if(todo.id === completedTodo){
-    //             return {...todos, completed: true};
-    //         }
-    //         return todo;
-    //     });
-    //     setTodos(updatedTodos);
-    //     setCompletedTodo(null);
-    // }
-
-    // function revertedTodo() {
-    //     const updatedTodos = todos.map(todo => {
-    //         if(todo.id === completedTodo){
-    //             return {...todos, completed: false};
-    //         }
-    //         return todo;
-    //     });
-    //     setTodos(updatedTodos);
-    //     setCompletedTodo(null);
-    // }
-
-    // function confirmCompletedTodo(id: number){
-    //     setCompletedTodo(id);
-    // }
-
     function sortbydate(ascend: boolean) {
-        // const sortedTask = [...todos].sort((a, b) => {
-        //     return new Date(a.from).getTime() - new Date(b.from).getTime();
-        // });
-        // setTodos(sortedTask);
         const sortedTask = [...todos].sort((a, b) => {
             return ascend ? new Date(a.from).getTime() - new Date(b.from).getTime() : new Date(b.from).getTime() - new Date(a.from).getTime();
         });
         setTodos(sortedTask);
     }
 
-      
+    const [allTodos, setAllTodos] = useState(todos)  ;
     function sortbystatus(completedStatus: boolean | null) {
-        // const sortedTask = [...todos].sort((a, b) => {
-        //     return a.completed === b.completed ? 0 : a.completed ? -1 : -1;
-        // });
-        // setTodos(sortedTask);
-        let updatedTodos = [...todos];
         
         if(completedStatus === null){
-            setTodos([...todos]);
+            setTodos(allTodos);
         }
         else{
-            const sortedTodo = [...todos].filter(todo => todo.completed === completedStatus);
+            const sortedTodo = allTodos.filter(todo => todo.completed === completedStatus);
             setTodos(sortedTodo);
         }
     }
@@ -208,6 +166,7 @@ export default function TodoApp({}: Props) {
                 <button onClick={() => sortbydate(true)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold'>Ascend</button>
                 <button onClick={() => sortbydate(false)} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold ml-1'>Descend</button>
             </span>
+
             <span>
             <span className='font-bold mr-2 ml-6'>Sort by status:</span>
                 <button onClick={() => sortbystatus(null)} className='bg-gray-400 text-black px-4 py-2 rounded-r font-bold ml-2'>All</button>
@@ -221,7 +180,9 @@ export default function TodoApp({}: Props) {
             {
                 (inputItem ? searchResult : todos).map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
+                        
                         <div className='w-full ml-3'>
+                            
                             {isEditedText !== index  && <span className='text-2xl font-bold border-b'>{todo.tkname}</span>}                           
                             {editeMode === todo.id ? 
                             <form className='justify-enter items-center'>                           
@@ -256,19 +217,20 @@ export default function TodoApp({}: Props) {
                                 </span>
                                 <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'hidden' : 'false'}
                                  bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Submit</button>
-                                 <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'enable' : 'hidden'}
+                                <button onClick={() => updateStt(todo.id)} className={`${todo.completed === true ? 'enable' : 'hidden'}
                                  bg-gray-400 border text-white font-bold rounded-r px-1 ml-2`}>Revert</button>
                                  
                                 <div className='flex font-bold border mt-2'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
-                                    <button  className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
-                                    {deleteTodo!==null && (
-                                        <div>
+                                    <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
+                                    <Popup open={deleteTodo!== null} closeOnDocumentClick={false} onClose={cancelDel}>
+                                        <div className='border bg-white px-6 py-6'>
                                             <h2>Are you sure you wanna delete this Todo ?</h2>
                                             <button onClick={confirmDel} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Confirm</button>
                                             <button onClick={cancelDel} className='bg-gray-400 border rounded-1 px-2 text-white m-1 ml-4'>Cancel</button>
                                         </div>
-                                    )}
+                                    </Popup>
+                                    
                                 </div>                                   
                             </div> }
                             
