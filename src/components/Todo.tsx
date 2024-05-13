@@ -47,7 +47,20 @@ export default function TodoApp({}: Props) {
     }
 
     const [deleteTodo, setDeleteTodo] = useState(null);
+    function delTodo(id: number){
+        setDeleteTodo(id);
+    }
 
+    function confirmDel() {
+        const updatedTodos = todos.filter(todo => todo.id !== deleteTodo);
+        setTodos(updatedTodos);
+        setDeleteTodo(null);
+    }
+
+    function cancelDel() {
+        setDeleteTodo(null);
+    }
+    
     // function delTodo(id: number){
     //     const updatedTodos = todos.filter((todo) => todo.id !== id);
     //     setTodos(updatedTodos);
@@ -249,6 +262,13 @@ export default function TodoApp({}: Props) {
                                 <div className='flex font-bold border mt-2'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
                                     <button  className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
+                                    {deleteTodo!==null && (
+                                        <div>
+                                            <h2>Are you sure you wanna delete this Todo ?</h2>
+                                            <button onClick={confirmDel} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Confirm</button>
+                                            <button onClick={cancelDel} className='bg-gray-400 border rounded-1 px-2 text-white m-1 ml-4'>Cancel</button>
+                                        </div>
+                                    )}
                                 </div>                                   
                             </div> }
                             
