@@ -153,7 +153,7 @@ export default function TodoApp({}: Props) {
             </span>          
             <span className='font-bold mb-3 ml-5'>Deadline
                 <input onChange={(e) => {setInputDate(e.target.value)}} value={inputDateEnd} 
-                type='datetime-local' className='bg-white-300 border rounded-1 px-2 py-2 ml-2'/>               
+                type='datetime-local' className='border-gray-300 border rounded-1 px-2 py-2 ml-2'/>               
             </span>
 
             <button onClick={addTodo} className='font-bold bg-blue-500 text-white px-4 py-2 rounded-r ml-1'>Add Todo</button>
