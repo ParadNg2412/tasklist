@@ -21,9 +21,9 @@ export default function TodoApp({}: Props) {
     const [inputText, setInputText] = useState("");
     const [inputDateEnd, setInputDate] = useState("");
     function addTodo(){
-        const hh = moment.duration(Number(moment().format("X")) -  Number(moment(inputDateEnd).format("X")), 'seconds').asHours();
-        const mm = moment.duration(Number(moment().format("X")) -  Number(moment(inputDateEnd).format("X")), 'seconds').minutes();
-        const ss = moment.duration(Number(moment().format("X")) -  Number(moment(inputDateEnd).format("X")), 'seconds').seconds();
+        const hh = moment.duration(Number(moment(inputDateEnd).format("X")) - Number(moment().format("X")), 'seconds').asHours();
+        const mm = moment.duration(Number(moment(inputDateEnd).format("X")) - Number(moment().format("X")), 'seconds').minutes();
+        const ss = moment.duration(Number(moment(inputDateEnd).format("X")) - Number(moment().format("X")), 'seconds').seconds();
         if(inputText.trim() !== ''){
             // const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
             // && todo.from === inputDate1 && todo.to === inputDate2);
