@@ -3,9 +3,9 @@ import React, { useRef, useState , useEffect} from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
 import Popup from 'reactjs-popup';
+import debounce from 'lodash/debounce';
 
-
-// moment().format('MMMM Do YYYY h:mm:ss a')
+// moment().format('MMMM Do YYYY h:mm:ss ');
 
 type Props = {}
 
@@ -23,7 +23,7 @@ export default function TodoApp({}: Props) {
     const [inputDate1, setInputDate1] = useState("");
     const [inputDate2, setInputDate2] = useState("");
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
-    const [inputItem, setInputItem] = useState("");
+    
     
     
     function addTodo(){
@@ -37,12 +37,13 @@ export default function TodoApp({}: Props) {
             const newTodo = {
                 id: todos.length + 1,
                 tkname: inputText,
-                from: "none",
-                to: "none",
+                from: '',
+                to: '',
                 completed: false , //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh"
-                duration: '0:0:0'  
+                duration: '0:0:0'  //Chua co set thoi gian nen duration luon la 0
             };
             setTodos([...todos, newTodo]);
+            
             setInputText("");
         }
     }
@@ -85,9 +86,9 @@ export default function TodoApp({}: Props) {
             const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
             const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss}:todo);
             setTodos(updatedTodos);
-            setEditeMode(null);
+            
         }
-        
+        //setEditeMode(null);
     }
 
     function cancelEdit(){       
@@ -95,19 +96,23 @@ export default function TodoApp({}: Props) {
         setIsEditedText(null);
     }
 
-    const [searchResult, setSearchResult] = useState([] as typeof init);
+    const [searchResult, setSearchResult] = useState<Todo[]>([]);
+    const [inputItem, setInputItem] = useState("");
+    const debounceSearch = debounce((key: string) => {
+        const results = todos.filter(todo => todo.tkname.toLowerCase().includes(key.toLowerCase()));
+        setSearchResult(results);
+    }, 300);
+
+    const ChangeKey = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const key = e.target.value;
+        setInputItem(key);
+        debounceSearch(key);
+    };
+
     function searchTodo(){
-
-        const term = inputItem.toLowerCase();
-        if(term === ""){
-            setSearchResult([]);
-        }
-        else{
-            const foundTodo = todos.filter((todo) => todo.tkname.toLowerCase().includes(term));
-            setSearchResult(foundTodo);          
-        }       
+        debounceSearch(inputItem);
     }
-
+    
     function cancelSearch(){
         setInputItem("");
         setSearchResult([]);       
@@ -128,18 +133,11 @@ export default function TodoApp({}: Props) {
         setTodos(sortedTask);
     }
 
-    const [allTodos, setAllTodos] = useState(todos)  ;
-    function sortbystatus(completedStatus: boolean | null) {
-        
-        if(completedStatus === null){
-            setTodos(allTodos);
-        }
-        else{
-            const sortedTodo = allTodos.filter(todo => todo.completed === completedStatus);
-            setTodos(sortedTodo);
-        }
+    const [showCompleted, setShowCompleted] = useState<boolean>(true);
+    const filterdTodo = showCompleted ? todos.filter(todo => todo.completed) : todos.filter(todo => !todo.completed)
+    function ToggleShowTodo() {
+        setShowCompleted(!showCompleted);
     }
-
 
   return (
     <div className=''>
@@ -154,7 +152,7 @@ export default function TodoApp({}: Props) {
             placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2'/>
 
             <button onClick={addTodo} className='bg-blue-500 text-white px-4 py-2 rounded-r'>Add</button>
-            <input onChange={(e) => {setInputItem(e.target.value)}} value={inputItem} type='text' //onKeyDown={(e) => e.which === 13 &&  searchTodo()} 
+            <input onChange={ChangeKey} value={inputItem} type='text' //onKeyDown={(e) => e.which === 13 &&  searchTodo()} 
              placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
             <button onClick={() => searchTodo()} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
             {inputItem && <button onClick={() => cancelSearch()} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-1'>Cancel</button>}
@@ -169,16 +167,16 @@ export default function TodoApp({}: Props) {
 
             <span>
             <span className='font-bold mr-2 ml-6'>Sort by status:</span>
-                <button onClick={() => sortbystatus(null)} className='bg-gray-400 text-black px-4 py-2 rounded-r font-bold ml-2'>All</button>
-                <button onClick={() => sortbystatus(true)} className='bg-green-500 text-white px-4 py-2 rounded-r font-bold ml-2'>Completed</button>
-                <button onClick={() => sortbystatus(false)} className='bg-red-500 text-white px-4 py-2 rounded-r font-bold ml-2'>Incomplete</button>
+                {/* <button  className='bg-gray-400 text-black px-4 py-2 rounded-r font-bold ml-2'>Sort by Status</button> */}
+                <button onClick={ToggleShowTodo} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold ml-2'>{showCompleted ? "Completed" : "Incomplete"}</button>
+                {/* <button  className='bg-red-500 text-white px-4 py-2 rounded-r font-bold ml-2'>Incomplete</button> */}
             </span>           
             
         </div>
         
         <ul ref={animationParent}>
             {
-                (inputItem ? searchResult : todos).map( (todo, index) => (
+                (inputItem ? searchResult : todos && filterdTodo).map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
                         
                         <div className='w-full ml-3'>
