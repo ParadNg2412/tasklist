@@ -4,7 +4,7 @@ import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
 
 
-moment().format('MMMM Do YYYY h:mm:ss a')
+// moment().format('MMMM Do YYYY h:mm:ss a')
 
 type Props = {}
 
