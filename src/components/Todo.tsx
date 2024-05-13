@@ -21,9 +21,9 @@ export default function TodoApp({}: Props) {
     const [inputText, setInputText] = useState("");
     const [inputDateEnd, setInputDate] = useState("");
     function addTodo(){
-        const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
-        const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
-        const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
+        const hh = moment.duration(Number(moment().format("X")) -  Number(moment(inputDateEnd).format("X")), 'seconds').asHours();
+        const mm = moment.duration(Number(moment().format("X")) -  Number(moment(inputDateEnd).format("X")), 'seconds').minutes();
+        const ss = moment.duration(Number(moment().format("X")) -  Number(moment(inputDateEnd).format("X")), 'seconds').seconds();
         if(inputText.trim() !== ''){
             // const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
             // && todo.from === inputDate1 && todo.to === inputDate2);
@@ -37,7 +37,7 @@ export default function TodoApp({}: Props) {
                 from: moment().format("YYYY-MM-DD HH:mm"), //Thoi gian se tu dong set theo thoi gian vua them Todo 
                 to: inputDateEnd,
                 completed: false , //Trang thai Todo sau khi tao luon mac dinh la "Chua hoan thanh"
-                duration: hh + ':' + mm   
+                duration: hh + ':' + mm  
             };
             setTodos([...todos, newTodo]);
             setInputDate("");
@@ -84,7 +84,7 @@ export default function TodoApp({}: Props) {
             const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
             const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
             const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
-            const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss}:todo);
+            const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm }:todo);
             setTodos(updatedTodos);           
         }
         setEditeMode(null);
@@ -148,7 +148,7 @@ export default function TodoApp({}: Props) {
                     setInputText(e.target.value), 
                     setIsEditedText(null)
                 }} value={inputText} type='text' 
-                onKeyDown={(e) => e.which === 13 &&  addTodo()}
+                onKeyDown={(e) => e.which === 13 && addTodo()}
                 placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2 ml-5'/>
             </span>          
             <span className='font-bold mb-3 ml-5'>Deadline
