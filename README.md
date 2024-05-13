@@ -5,8 +5,26 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 Install packages:
 ```bash
 npm install react
+# or
+yarn add react
+
+npm install @formkit/auto-animate
+# or
+yarn add @formkit/auto-animate
+
 npm install moment
+# or 
+yarn add moment
+
 npm install reactjs-popup
+# or
+yarn add reactjs-popup
+
+npm install lodash
+# or
+$ npm i -g npm
+# or
+$ npm i --save lodash
 ```
 
 Then run the development server:

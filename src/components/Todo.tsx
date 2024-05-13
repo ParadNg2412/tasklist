@@ -37,7 +37,7 @@ export default function TodoApp({}: Props) {
             const newTodo = {
                 id: todos.length + 1,
                 tkname: inputText,
-                from: '',
+                from: moment().format("YYYY-MM-DD HH:mm:ss"),
                 to: '',
                 completed: false , //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh"
                 duration: '0:0:0'  //Chua co set thoi gian nen duration luon la 0
@@ -224,8 +224,8 @@ export default function TodoApp({}: Props) {
                                     <Popup open={deleteTodo!== null} closeOnDocumentClick={false} onClose={cancelDel}>
                                         <div className='border bg-white px-6 py-6'>
                                             <h2>Are you sure you wanna delete this Todo ?</h2>
-                                            <button onClick={confirmDel} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Confirm</button>
-                                            <button onClick={cancelDel} className='bg-gray-400 border rounded-1 px-2 text-white m-1 ml-4'>Cancel</button>
+                                            <button onClick={confirmDel} className='bg-green-500 font-bold border rounded-1 px-2 text-white m-1 ml-6 mt-5'>Confirm</button>
+                                            <button onClick={cancelDel} className='bg-gray-400 font-bold border rounded-1 px-2 text-white m-1 ml-4'>Cancel</button>
                                         </div>
                                     </Popup>
                                     
