@@ -28,6 +28,9 @@ export default function TodoApp({}: Props) {
     
     
     function addTodo(){
+        const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
+        const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
+        const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
         if(inputText.trim() !== ''){
             // const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
             // && todo.from === inputDate1 && todo.to === inputDate2);
@@ -41,10 +44,10 @@ export default function TodoApp({}: Props) {
                 from: moment().format("YYYY-MM-DD HH:mm"),
                 to: inputDateEnd,
                 completed: false , //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh"
-                duration: '0:0:0'  //Chua co set thoi gian nen duration luon la 0
+                duration: hh + ':' + mm   
             };
             setTodos([...todos, newTodo]);
-            
+            setInputDate("");
             setInputText("");
         }
     }
