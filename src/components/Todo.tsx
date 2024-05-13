@@ -15,18 +15,11 @@ export default function TodoApp({}: Props) {
         {id:1, tkname:"Todo web Layout", from: "2024-05-03 09:00", to: "2024-05-03 17:00", completed: true, duration: '9:0:0'},
         {id:2, tkname:"Simple CRUD functions", from: "2024-05-04 08:00", to: "2024-05-04 17:00", completed: true, duration: '9:0:0'},
         {id:3, tkname:"Datetime layout for each task", from: "2024-05-02 08:00", to: "2024-05-02 17:00", completed: false, duration: '9:0:0'}
-    ]
+    ] //Data cung
     const [todos, setTodos] = useState(init);
+
     const [inputText, setInputText] = useState("");
-    const [inputDateEnd, setInputDate] = useState("")
-    const [editeMode, setEditeMode] = useState<number| null>(null);
-    const [editedText, setEditedText] = useState("");
-    const [inputDate1, setInputDate1] = useState("");
-    const [inputDate2, setInputDate2] = useState("");
-    const [isEditedText, setIsEditedText] = useState<number | null>(null);
-    
-    
-    
+    const [inputDateEnd, setInputDate] = useState("");
     function addTodo(){
         const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
         const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
@@ -41,9 +34,9 @@ export default function TodoApp({}: Props) {
             const newTodo = {
                 id: todos.length + 1,
                 tkname: inputText,
-                from: moment().format("YYYY-MM-DD HH:mm"),
+                from: moment().format("YYYY-MM-DD HH:mm"), //Thoi gian se tu dong set theo thoi gian vua them Todo 
                 to: inputDateEnd,
-                completed: false , //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh"
+                completed: false , //Trang thai Todo sau khi tao luon mac dinh la "Chua hoan thanh"
                 duration: hh + ':' + mm   
             };
             setTodos([...todos, newTodo]);
@@ -67,7 +60,11 @@ export default function TodoApp({}: Props) {
         setDeleteTodo(null);
     }
     
-
+    const [editeMode, setEditeMode] = useState<number| null>(null);
+    const [editedText, setEditedText] = useState("");
+    const [inputDate1, setInputDate1] = useState("");
+    const [inputDate2, setInputDate2] = useState("");
+    const [isEditedText, setIsEditedText] = useState<number | null>(null);
     function editTodo(id: number){
         setEditeMode(id);
         const todoToEdit = todos.find((todo) => todo.id == id);
@@ -75,8 +72,7 @@ export default function TodoApp({}: Props) {
             setEditedText(todoToEdit.tkname);
             setInputDate1(todoToEdit.from);
             setInputDate2(todoToEdit.to);
-        }
-        
+        }       
     }
 
     function saveEditedTodo(){
@@ -89,8 +85,7 @@ export default function TodoApp({}: Props) {
             const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
             const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
             const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm + ':' + ss}:todo);
-            setTodos(updatedTodos);
-            
+            setTodos(updatedTodos);           
         }
         setEditeMode(null);
     }
@@ -177,9 +172,7 @@ export default function TodoApp({}: Props) {
 
             <span>
             <span className='font-bold mr-2 ml-6'>Sort by status:</span>
-                {/* <button  className='bg-gray-400 text-black px-4 py-2 rounded-r font-bold ml-2'>Sort by Status</button> */}
                 <button onClick={ToggleShowTodo} className='bg-gray-400 text-white px-4 py-2 rounded-r font-bold ml-2'>{showCompleted ? "Completed" : "Incomplete"}</button>
-                {/* <button  className='bg-red-500 text-white px-4 py-2 rounded-r font-bold ml-2'>Incomplete</button> */}
             </span>           
             
         </div>
