@@ -18,6 +18,7 @@ export default function TodoApp({}: Props) {
     ]
     const [todos, setTodos] = useState(init);
     const [inputText, setInputText] = useState("");
+    const [inputDateEnd, setInputDate] = useState("")
     const [editeMode, setEditeMode] = useState<number| null>(null);
     const [editedText, setEditedText] = useState("");
     const [inputDate1, setInputDate1] = useState("");
@@ -37,8 +38,8 @@ export default function TodoApp({}: Props) {
             const newTodo = {
                 id: todos.length + 1,
                 tkname: inputText,
-                from: moment().format("YYYY-MM-DD HH:mm:ss"),
-                to: '',
+                from: moment().format("YYYY-MM-DD HH:mm"),
+                to: inputDateEnd,
                 completed: false , //Trang thai Task sau khi tao luon mac dinh la "Chua hoan thanh"
                 duration: '0:0:0'  //Chua co set thoi gian nen duration luon la 0
             };
@@ -88,7 +89,7 @@ export default function TodoApp({}: Props) {
             setTodos(updatedTodos);
             
         }
-        //setEditeMode(null);
+        setEditeMode(null);
     }
 
     function cancelEdit(){       
@@ -96,7 +97,7 @@ export default function TodoApp({}: Props) {
         setIsEditedText(null);
     }
 
-    const [searchResult, setSearchResult] = useState<Todo[]>([]);
+    const [searchResult, setSearchResult] = useState<[...todos]>([]);
     const [inputItem, setInputItem] = useState("");
     const debounceSearch = debounce((key: string) => {
         const results = todos.filter(todo => todo.tkname.toLowerCase().includes(key.toLowerCase()));
@@ -144,17 +145,23 @@ export default function TodoApp({}: Props) {
         <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
         <h3 className='text-2xl mb-4'>Task management</h3>
         <div className='mb-5'>
-            <input onChange={(e) => {
-                setInputText(e.target.value), 
-                setIsEditedText(null)
-            }} value={inputText} type='text' 
-            onKeyDown={(e) => e.which === 13 &&  addTodo()}
-            placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2'/>
+            <span className='font-bold mb-2'>Title
+                <input onChange={(e) => {
+                    setInputText(e.target.value), 
+                    setIsEditedText(null)
+                }} value={inputText} type='text' 
+                onKeyDown={(e) => e.which === 13 &&  addTodo()}
+                placeholder='Add a todo...' className='border-gray-300 border rounded-1 px-4 py-2 ml-5'/>
+            </span>          
+            <span className='font-bold mb-3 ml-5'>Deadline
+                <input onChange={(e) => {setInputDate(e.target.value)}} value={inputDateEnd} 
+                type='datetime-local' className='bg-white-300 border rounded-1 px-2 py-2 ml-2'/>               
+            </span>
 
-            <button onClick={addTodo} className='bg-blue-500 text-white px-4 py-2 rounded-r'>Add</button>
+            <button onClick={addTodo} className='font-bold bg-blue-500 text-white px-4 py-2 rounded-r ml-1'>Add Todo</button>
             <input onChange={ChangeKey} value={inputItem} type='text' //onKeyDown={(e) => e.which === 13 &&  searchTodo()} 
              placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-4 py-2 ml-40'/>
-            <button onClick={() => searchTodo()} className='bg-gray-500 text-white px-4 py-2 rounded-r'>Search</button>
+            <button onClick={() => searchTodo()} className='font-bold bg-gray-500 text-white px-4 py-2 rounded-r ml-0'>Search</button>
             {inputItem && <button onClick={() => cancelSearch()} className='bg-gray-500 text-white px-4 py-2 rounded-r ml-1'>Cancel</button>}
             
         </div>
@@ -176,7 +183,7 @@ export default function TodoApp({}: Props) {
         
         <ul ref={animationParent}>
             {
-                (inputItem ? searchResult : todos && filterdTodo).map( (todo, index) => (
+                (inputItem ? searchResult  : todos && filterdTodo).map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
                         
                         <div className='w-full ml-3'>
