@@ -4,19 +4,30 @@ import {useAutoAnimate} from '@formkit/auto-animate/react';
 import moment from 'moment';
 import Popup from 'reactjs-popup';
 import debounce from 'lodash/debounce';
+import axios from 'axios';
 
-// moment().format('MMMM Do YYYY h:mm:ss ');
 
 type Props = {}
 
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
-    const init = [
-        {id:1, tkname:"Todo web Layout", from: "2024-05-03 09:00", to: "2024-05-03 17:00", completed: true, duration: '9:0:0'},
-        {id:2, tkname:"Simple CRUD functions", from: "2024-05-04 08:00", to: "2024-05-04 17:00", completed: true, duration: '9:0:0'},
-        {id:3, tkname:"Datetime layout for each task", from: "2024-05-02 08:00", to: "2024-05-02 17:00", completed: false, duration: '9:0:0'}
-    ] //Data cung
-    const [todos, setTodos] = useState(init);
+    // const init = [
+    //     {id:1, tkname:"Todo web Layout", from: "2024-05-03 09:00", to: "2024-05-03 17:00", completed: true, duration: '9:0:0'},
+    //     {id:2, tkname:"Simple CRUD functions", from: "2024-05-04 08:00", to: "2024-05-04 17:00", completed: true, duration: '9:0:0'},
+    //     {id:3, tkname:"Datetime layout for each task", from: "2024-05-02 08:00", to: "2024-05-02 17:00", completed: false, duration: '9:0:0'}
+    // ] //Data cung
+    const [todos, setTodos] = useState([]);
+
+    useEffect(() => {
+        axios.get(`https://jsonplaceholder.typicode.com/todos`)
+            .then(response => {
+                setTodos(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
 
     const [inputText, setInputText] = useState("");
     const [inputDateEnd, setInputDate] = useState("");
@@ -25,39 +36,66 @@ export default function TodoApp({}: Props) {
         const mm = moment.duration(Number(moment(inputDateEnd).format("X")) - Number(moment().format("X")), 'seconds').minutes();
         const ss = moment.duration(Number(moment(inputDateEnd).format("X")) - Number(moment().format("X")), 'seconds').seconds();
         if(inputText.trim() !== ''){
-            // const isExistingTodo = todos.some((todo) => todo.tkname === inputText 
-            // && todo.from === inputDate1 && todo.to === inputDate2);
-            // if(isExistingTodo){
-            //     alert("This Todo already exist!");
-            //     setInputText("");
-            //    return;
-            const newTodo = {
-                id: todos.length + 1,
-                tkname: inputText,
-                from: moment().format("YYYY-MM-DD HH:mm"), //Thoi gian se tu dong set theo thoi gian vua them Todo 
-                to: inputDateEnd,
-                completed: false , //Trang thai Todo sau khi tao luon mac dinh la "Chua hoan thanh"
-                duration: hh + ':' + mm  
-            };
-            setTodos([...todos, newTodo]);
-            setInputDate("");
-            setInputText("");
+            //Data cung
+            // const newTodo = {
+            //     id: todos.length + 1,
+            //     tkname: inputText,
+            //     from: moment().format("YYYY-MM-DD HH:mm"), //Thoi gian se tu dong set theo thoi gian vua them Todo 
+            //     to: inputDateEnd,
+            //     completed: false , //Trang thai Todo sau khi tao luon mac dinh la "Chua hoan thanh"
+            //     duration: hh + ':' + mm  
+            // };
+            // setTodos([...todos, newTodo]);
+            // setInputDate("");
+            // setInputText("");
+
+            //API
+            axios.post(`https://jsonplaceholder.typicode.com/todos`,
+                {
+                    id: todos.length + 1,
+                    title: inputText,
+                    start: moment().format("YYYY-MM-DD HH:mm"),
+                    end: inputDateEnd,
+                    completed: false,
+                    duration: hh + ':' + mm + ':' + ss
+                })
+                .then(response => {
+                    setTodos([...todos, response.data]);
+                })
+                .catch(error => {
+                    console.error('Error adding todo: ', error);
+                });
         }
     }
 
-    const [deleteTodo, setDeleteTodo] = useState(null);
+    //Data cung
+    // const [deleteTodo, setDeleteTodo] = useState(null);
+    // function delTodo(id: number){
+    //     setDeleteTodo(id);
+    // }
+
+    // function confirmDel() {
+    //     const updatedTodos = todos.filter(todo => todo.id !== deleteTodo);
+    //     setTodos(updatedTodos);
+    //     setDeleteTodo(null);
+    // }
+
+    // function cancelDel() {
+    //     setDeleteTodo(null);
+    // }
+
+    //API
     function delTodo(id: number){
-        setDeleteTodo(id);
-    }
-
-    function confirmDel() {
-        const updatedTodos = todos.filter(todo => todo.id !== deleteTodo);
-        setTodos(updatedTodos);
-        setDeleteTodo(null);
-    }
-
-    function cancelDel() {
-        setDeleteTodo(null);
+        const confirmDel = window.confirm("Are you sure you want to delete this todo ?");
+        if(confirmDel){
+            axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+                .then(() => {
+                    setTodos(todos.filter(todo => todo.id !== id));
+                })
+                .catch(error => {
+                    console.error('Error deleteing todo: ', error);
+                });
+        }
     }
     
     const [editeMode, setEditeMode] = useState<number| null>(null);
@@ -65,30 +103,41 @@ export default function TodoApp({}: Props) {
     const [inputDate1, setInputDate1] = useState("");
     const [inputDate2, setInputDate2] = useState("");
     const [isEditedText, setIsEditedText] = useState<number | null>(null);
-    function editTodo(id: number){
-        setEditeMode(id);
-        const todoToEdit = todos.find((todo) => todo.id == id);
-        if(todoToEdit){
-            setEditedText(todoToEdit.tkname);
-            setInputDate1(todoToEdit.from);
-            setInputDate2(todoToEdit.to);
-        }       
-    }
+    //Data cung
+     function editTodo(id: number){
+    //     setEditeMode(id);
+    //     const todoToEdit = todos.find((todo) => todo.id == id);
+    //     if(todoToEdit){
+    //         setEditedText(todoToEdit.tkname);
+    //         setInputDate1(todoToEdit.from);
+    //         setInputDate2(todoToEdit.to);
+    //     }       
+     }
 
-    function saveEditedTodo(){
-        if(editedText.trim() === ''){
-            alert("Warning: Todo's name cannot be empty! Please input Todo's name")
-            return;
-        }
-        else{
-            const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
-            const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
-            const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
-            const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm }:todo);
-            setTodos(updatedTodos);           
-        }
-        setEditeMode(null);
-    }
+     function saveEditedTodo(){
+    //     if(editedText.trim() === ''){
+    //         alert("Warning: Todo's name cannot be empty! Please input Todo's name")
+    //         return;
+    //     }
+    //     else{
+    //         const hh = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').asHours();
+    //         const mm = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').minutes();
+    //         const ss = moment.duration(Number(moment(inputDate2).format("X")) -  Number(moment(inputDate1).format("X")), 'seconds').seconds();
+    //         const updatedTodos = todos.map((todo) => todo.id === editeMode ? {...todo, tkname:editedText, from:inputDate1, to:inputDate2, duration: hh + ':' + mm }:todo);
+    //         setTodos(updatedTodos);           
+    //     }
+    //     setEditeMode(null);
+     }
+
+    //API
+    // function editTodo(todo) {
+    //     setEditeMode(todo);
+    //     setEditedText(todo.title)
+    // }
+
+    // function saveEditedTodo(){
+        
+    // }
 
     function cancelEdit(){       
         setEditeMode(null);
@@ -97,8 +146,15 @@ export default function TodoApp({}: Props) {
 
     const [searchResult, setSearchResult] = useState<[...todos]>([]);
     const [inputItem, setInputItem] = useState("");
-    const debounceSearch = debounce((key: string) => {
-        const results = todos.filter(todo => todo.tkname.toLowerCase().includes(key.toLowerCase()));
+    //Data cung
+    // const debounceSearch = debounce((key: string) => {
+    //      const results = todos.filter(todo => todo.tkname.toLowerCase().includes(key.toLowerCase()));
+    //      setSearchResult(results);
+    //  }, 300);
+
+    //API
+     const debounceSearch = debounce((key: string) => {
+        const results = todos.filter(todo => todo.title.toLowerCase().includes(key.toLowerCase()));
         setSearchResult(results);
     }, 300);
 
@@ -118,25 +174,27 @@ export default function TodoApp({}: Props) {
     }
 
     function updateStt(id: number) {
-        const index = todos.findIndex((todo) => todo.id === id);
-        const updateStatus = todos[index]["completed"] !== true ? true : false;
-        todos[index]["completed"] = updateStatus;
-        setTodos([...todos]);
+        // const index = todos.findIndex((todo) => todo.id === id);
+        // const updateStatus = todos[index]["completed"] !== true ? true : false;
+        // todos[index]["completed"] = updateStatus;
+        // setTodos([...todos]);
     }
 
 
     function sortbydate(ascend: boolean) {
-        const sortedTask = [...todos].sort((a, b) => {
-            return ascend ? new Date(a.from).getTime() - new Date(b.from).getTime() : new Date(b.from).getTime() - new Date(a.from).getTime();
-        });
-        setTodos(sortedTask);
+        // const sortedTask = [...todos].sort((a, b) => {
+        //     return ascend ? new Date(a.from).getTime() - new Date(b.from).getTime() : new Date(b.from).getTime() - new Date(a.from).getTime();
+        // });
+        // setTodos(sortedTask);
     }
 
     const [showCompleted, setShowCompleted] = useState<boolean>(true);
-    const filterdTodo = showCompleted ? todos.filter(todo => todo.completed) : todos.filter(todo => !todo.completed)
+    //const filterdTodo = showCompleted ? todos.filter(todo => todo.completed) : todos.filter(todo => !todo.completed)
     function ToggleShowTodo() {
         setShowCompleted(!showCompleted);
     }
+
+    
 
   return (
     <div className=''>
@@ -179,12 +237,13 @@ export default function TodoApp({}: Props) {
         
         <ul ref={animationParent}>
             {
-                (inputItem ? searchResult  : todos && filterdTodo).map( (todo, index) => (
+                //(inputItem ? searchResult  : todos && filterdTodo)
+                (inputItem ? searchResult  : todos).map( (todo, index) => (
                     <li key={todo.id} className='flex item-center justify-between border py-2 mb-2'>
                         
                         <div className='w-full ml-3'>
                             
-                            {isEditedText !== index  && <span className='text-2xl font-bold border-b'>{todo.tkname}</span>}                           
+                            {isEditedText !== index  && <span className='text-2xl font-bold border-b'>{todo.title}</span>}                           
                             {editeMode === todo.id ? 
                             <form className='justify-enter items-center'>                           
                                 <input onChange={(e) => {
@@ -208,8 +267,8 @@ export default function TodoApp({}: Props) {
                                 <button onClick={()=> cancelEdit()} className='bg-gray-400 text-white px-4 py-2 rounded-r ml-1'>X</button>                         
                             </form> : 
                             <div className=''>
-                                <ul className=''>Start: {(moment(todo.from).format("YYYY-MM-DD HH:mm"))}</ul>
-                                <ul className=''>Deadline: {(moment(todo.to).format("YYYY-MM-DD HH:mm"))}</ul>
+                                <ul className=''>Start: {(moment(todo.start).format("YYYY-MM-DD HH:mm"))}</ul>
+                                <ul className=''>Deadline: {(moment(todo.end).format("YYYY-MM-DD HH:mm"))}</ul>
                                 <ul>Duration: {todo.duration}</ul>
                                 <span>Status: 
                                     <span className={`${todo.completed === true ? 'text-green-400':'text-red-500'} font-bold ml-1`}>
@@ -224,13 +283,13 @@ export default function TodoApp({}: Props) {
                                 <div className='flex font-bold border mt-2'>
                                     <button onClick={() => editTodo(todo.id)} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
                                     <button onClick={() => delTodo(todo.id)} className='bg-red-500 border rounded-1 px-2 text-white m-1'>Delete</button>
-                                    <Popup open={deleteTodo!== null} closeOnDocumentClick={false} onClose={cancelDel}>
+                                    {/* <Popup open={deleteTodo!== null} closeOnDocumentClick={false} onClose={cancelDel}>
                                         <div className='border bg-white px-6 py-6'>
                                             <h2>Are you sure you wanna delete this Todo ?</h2>
                                             <button onClick={confirmDel} className='bg-green-500 font-bold border rounded-1 px-2 text-white m-1 ml-6 mt-5'>Confirm</button>
                                             <button onClick={cancelDel} className='bg-gray-400 font-bold border rounded-1 px-2 text-white m-1 ml-4'>Cancel</button>
                                         </div>
-                                    </Popup>
+                                    </Popup> */}
                                     
                                 </div>                                   
                             </div> }
