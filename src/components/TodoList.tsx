@@ -1,11 +1,11 @@
 'use client'
 import React, {useState , useEffect} from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
-import debounce from 'lodash/debounce';
+
 import axios from 'axios';
 import TodoItem from './TodoItem'
 import AddTodo from './AddTodo';
-
+import SearchTodo from './SearchTodo';
 
 
 type Props = {}
@@ -13,7 +13,8 @@ type Props = {}
 export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const [todos, setTodos] = useState([]);
-    
+    const [searchTerm, setSearchTerm] = useState('');
+
     //Fetch API
     function fetch(){
         axios.get('https://jsonplaceholder.typicode.com/todos')
@@ -120,23 +121,32 @@ export default function TodoApp({}: Props) {
     //     setShowCompleted(!showCompleted);
     // }
 
-    
+    const SearchTerm = (term) => {
+        setSearchTerm(term);
+    };
 
-  return (
-    <div className=''>
-        <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
-        <h3 className='text-2xl mb-4'>Task management</h3>
-        <AddTodo fetchTodos={fetch}/>
-        
-        <ul ref={animationParent}>
-            {
-                
-                todos.map( (todo) => (
-                    <TodoItem key={todo.id} todo={todo} fetchTodos={fetch}/>
+    return (
+        <div className=''>
+            <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
+            <h3 className='text-2xl mb-4'>Task management</h3>
+            <span>
+                <AddTodo setTodos={setTodos} todos={todos}/>
+                <SearchTodo setSearchTerm={SearchTerm} fetchSearchResult={SearchTerm}/>
+            </span>
+            
+            
+            <ul ref={animationParent}>
+                {
                     
-                ))
-            }           
-        </ul>
-    </div>
+                    todos
+                        .filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                        .map( (todo, index) => (
+                        //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
+                        <TodoItem key={todo.id}  todo={todo} fetchTodos={fetch}/>
+                        
+                        ))
+                }           
+            </ul>
+        </div>
   )
 }

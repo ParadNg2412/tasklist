@@ -43,7 +43,7 @@ export default function TodoItem({todo, fetchTodos}) {
     // }
 
   return (
-    <div className='w-full ml-3 border mb-1'>
+    <div className='w-full ml-3 border mb-1 mt-2'>
         <ul className='text-2xl font-bold'>{todo.title}</ul>
         <div className='flex item-center justify-between py-2 mb-2'>
             
