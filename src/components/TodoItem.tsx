@@ -1,59 +1,50 @@
 'use client'
 import React, { useRef, useState , useEffect} from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
-import axios from 'axios';
+import EditTodo from './EditTodo';
+import DelTodo from './DelTodo';
 
 
 
 type Props = {}
 
-export default function TodoItem({todo, fetchTodos}) {
+export default function TodoItem({todo, onEdit, todos, setTodos}) {
     const [animationParent] = useAutoAnimate();
     const [editMode, setEditMode] = useState(false);
-    
-    // function deleteTodo(id: number){
-    //     if(window.confirm('Are you sure you want to delete this Todo ?')){
-    //         axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
-    //         .then(() => {
-    //             fetchTodos();
-    //         })
-    //         .catch(error => {
-    //             console.error('Error deleting todo: ', error);
-    //         })
-    //     }
-        
-    // }
 
-    // const toggleCompleted = (){
-    //     axios.put(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
-    //         ...todo,
-    //         completed: !todo.completed
-    //     })
-    //     .then(() => {
-    //         fetchTodos();
-    //     })
-    //     .catch(error => {
-    //         console.error('Error updating todo: ', error);
-    //     });
-            
-    // };
+    const editTodo = () => {
+      setEditMode(true);
+    }
+
     
-    // const toggleEditMode = () => {
-    //     setEditMode(prevState => ! PrevState);
-    // }
+
+    const CancelEdit = () => {
+      setEditMode(false);
+    };
+
+    const onSave = (id, editedTitle) => {
+      onEdit(id, editedTitle);
+      CancelEdit();
+  }
 
   return (
     <div className='w-full ml-3 border mb-1 mt-2'>
-        <ul className='text-2xl font-bold'>{todo.title}</ul>
-        <div className='flex item-center justify-between py-2 mb-2'>
-            
-            <ul>Status: 
+      {!editMode ? (
+        <div>
+            <ul className='text-2xl font-bold'>{todo.title}</ul>
+            <div className='flex item-center justify-between py-2 mb-2'>
+              <ul>Status: 
                 {todo.completed}
-            </ul>
-        </div>
+              </ul>
+            </div>
+            <div className='flex font-bold border mt-2'>
+              <button onClick={editTodo} className='bg-green-500 border rounded-1 px-2 text-white m-1'>Edit</button>
+              <DelTodo todoId={todo.id} todos={todos} setTodos={setTodos} />
+            </div>
+        </div>) : (
+        <EditTodo todo={todo} onSave={onSave} onCancel={CancelEdit} />
         
-                       
-        
+      )} 
     </div>
   )
 }

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export default function AddTodo({ todos, setTodos }){
     const [inputText, setInputText] = useState('');
-    const [nextId, setNextId] = useState(201)
+    const [nextId, setNextId] = useState(201);
     function addTodo(){
         if (inputText.trim() !== '') {
             axios.post('https://jsonplaceholder.typicode.com/todos', {

@@ -6,6 +6,7 @@ import axios from 'axios';
 import TodoItem from './TodoItem'
 import AddTodo from './AddTodo';
 import SearchTodo from './SearchTodo';
+import { title } from 'process';
 
 
 type Props = {}
@@ -19,6 +20,7 @@ export default function TodoApp({}: Props) {
     function fetch(){
         axios.get('https://jsonplaceholder.typicode.com/todos')
             .then(response => {
+                console.log('12313')
                 setTodos(response.data);
             })
             .catch(error => {
@@ -30,82 +32,7 @@ export default function TodoApp({}: Props) {
         fetch();
     }, []);
 
-    //Add
-    // const [inputText, setInputText] = useState("");
     
-    // function addTodo(){
-    //     if(inputText.trim() !== ''){
-    //         axios.post('https://jsonplaceholder.typicode.com/todos',{   
-    //             id: count + 1,          
-    //             title: inputText,
-    //             completed: false
-    //             })
-    //             .then(response => {
-    //                 setTodos([...todos, response.data]);
-    //                 setInputText("");
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error adding todo: ', error);
-    //             });
-    //     }
-    // }
-    //Del
-    // function delTodo(id: number){
-    //     const confirmDel = window.confirm("Are you sure you want to delete this todo ?");
-    //     if(confirmDel){
-    //         axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
-    //             .then(() => {
-    //                 setTodos(todos.filter(todo => todo.id !== id));
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error deleteing todo: ', error);
-    //             });
-    //     }
-    // }
-    
-    // const [editTodo, setEditTodo] = useState(null);
-    // const [editedText, setEditedText] = useState("");
-    
-    // function EditTodo(todo){
-        
-    // }
-
-    // function saveEditedTodo(){
-    //     if(editTodo && editedText.trim() === ''){
-    //         alert("Warning: Todo's name cannot be empty! Please input Todo's name")
-    //         return;
-    //     }
-    //     else{
-                
-    //         }
-    //  }
-
-    // function cancelEdit(){       
-    //     setEditTodo(null);
-       
-    // }
-
-    // const [searchResult, setSearchResult] = useState<[...todos]>([]);
-    // const [inputItem, setInputItem] = useState("");
-    //  const debounceSearch = debounce((key: string) => {
-    //     const results = todos.filter(todo => todo.title.toLowerCase().includes(key.toLowerCase()));
-    //     setSearchResult(results);
-    // }, 300);
-
-    // const ChangeKey = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const key = e.target.value;
-    //     setInputItem(key);
-    //     debounceSearch(key);
-    // };
-
-    // function searchTodo(){
-    //     debounceSearch(inputItem);
-    // }
-    
-    // function cancelSearch(){
-    //     setInputItem("");
-    //     setSearchResult([]);       
-    // }
 
     //function updateStt() {
         // const index = todos.findIndex((todo) => todo.id === id);
@@ -121,8 +48,24 @@ export default function TodoApp({}: Props) {
     //     setShowCompleted(!showCompleted);
     // }
 
+    //Xu ly search
     const SearchTerm = (term) => {
         setSearchTerm(term);
+    };
+
+    
+
+    const onEdit = (id, editedTitle) => {
+        console.log('123',id)
+        const a = todos.find(item => item.id === id ? {...item, title: editedTitle} : item);
+        const b = {...a, title: editedTitle}
+        const c = todos.map(item => item.id === id ? b : item)
+        setTodos(c);
+        // todos.push(b);
+        // setTodos(b);
+        console.log('cc',c)
+        // setTodos(prevTodos => {
+        //     prevTodos.find(item => item.id === id ? {...item, title: editedTitle} : item)});
     };
 
     return (
@@ -136,13 +79,18 @@ export default function TodoApp({}: Props) {
             
             
             <ul ref={animationParent}>
+                
                 {
                     
                     todos
-                        .filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
-                        .map( (todo, index) => (
+                        ?.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                        .map( (todo ,index) => (
                         //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
-                        <TodoItem key={todo.id}  todo={todo} fetchTodos={fetch}/>
+                        <TodoItem key={`${todo?.id} +'-'+ ${index}`}  todo={todo} 
+                        onEdit={onEdit}
+                        setTodos={setTodos}
+                        todos={todos} 
+                        />
                         
                         ))
                 }           
