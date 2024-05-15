@@ -56,16 +56,11 @@ export default function TodoApp({}: Props) {
     
 
     const onEdit = (id, editedTitle) => {
-        console.log('123',id)
         const a = todos.find(item => item.id === id ? {...item, title: editedTitle} : item);
         const b = {...a, title: editedTitle}
         const c = todos.map(item => item.id === id ? b : item)
         setTodos(c);
-        // todos.push(b);
-        // setTodos(b);
-        console.log('cc',c)
-        // setTodos(prevTodos => {
-        //     prevTodos.find(item => item.id === id ? {...item, title: editedTitle} : item)});
+        
     };
 
     return (
@@ -86,10 +81,11 @@ export default function TodoApp({}: Props) {
                         ?.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
                         .map( (todo ,index) => (
                         //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
-                        <TodoItem key={`${todo?.id} +'-'+ ${index}`}  todo={todo} 
+                        <TodoItem key={`${todo?.id} +'-'+ ${index}`} todo={todo} 
                         onEdit={onEdit}
                         setTodos={setTodos}
-                        todos={todos} 
+                        todos={todos}
+                        
                         />
                         
                         ))

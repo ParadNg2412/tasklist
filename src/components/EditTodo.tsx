@@ -14,7 +14,7 @@ export default function EditTodo({todo, onSave, onCancel}){
             axios.put(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, 
                         { title: editedTitle })
                 .then(() => {
-                    console.log('here')
+                    console.log('Edit success!')
                     onSave(todo.id, editedTitle);
                 })
                 .catch(error => {

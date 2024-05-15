@@ -3,6 +3,7 @@ import React, { useRef, useState , useEffect} from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react';
 import EditTodo from './EditTodo';
 import DelTodo from './DelTodo';
+import Status from './Status';
 
 
 
@@ -25,7 +26,8 @@ export default function TodoItem({todo, onEdit, todos, setTodos}) {
     const onSave = (id, editedTitle) => {
       onEdit(id, editedTitle);
       CancelEdit();
-  }
+    }
+
 
   return (
     <div className='w-full ml-3 border mb-1 mt-2 pl-2 pr-2'>
@@ -35,6 +37,7 @@ export default function TodoItem({todo, onEdit, todos, setTodos}) {
             <div className='flex item-center justify-between py-2 mb-2'>
               <ul className=''>Status: 
                 <span className={`${todo.completed === true ? 'text-green-400':'text-red-500'} font-bold ml-1`}>{`${todo.completed === true ? "Completed" : "Incomplete"}`}</span>
+                <Status todoId={todo.id} completed={todo.completed} todos={todos} setTodos={setTodos}/>
               </ul>
             </div>
             <div className='flex font-bold border mt-2 mb-1'>
