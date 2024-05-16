@@ -4,7 +4,7 @@ import axios from 'axios';
 export default function DelTodo({todoId, todos, setTodos}){
     
     const DeleteTodo = (id) => {
-        if (window.confirm('Are you sure you want to remove this Todo ?')) {
+        if (window.confirm('Are you sure you want to delete this Todo ?')) {
             axios.delete(`https://jsonplaceholder.typicode.com/todos/${todoId}`)
                 .then(() => {
                     console.log('Todo deleted', id);

@@ -1,6 +1,6 @@
 'use client'
 import React, { useRef, useState , useEffect} from 'react'
-import {useAutoAnimate} from '@formkit/auto-animate/react';
+//import {useAutoAnimate} from '@formkit/auto-animate/react';
 import EditTodo from './EditTodo';
 import DelTodo from './DelTodo';
 import Status from './Status';
@@ -10,27 +10,25 @@ import Status from './Status';
 type Props = {}
 
 export default function TodoItem({todo, onEdit, todos, setTodos}) {
-    const [animationParent] = useAutoAnimate();
+    // const [animationParent] = useAutoAnimate();
     const [editMode, setEditMode] = useState(false);
 
     const editTodo = () => {
       setEditMode(true);
     }
-
     
-
     const CancelEdit = () => {
       setEditMode(false);
     };
 
-    const onSave = (id, editedTitle) => {
+    const onSave = (id:number, editedTitle:string) => {
       onEdit(id, editedTitle);
       CancelEdit();
     }
 
 
   return (
-    <div className='w-full ml-3 border mb-1 mt-2 pl-2 pr-2'>
+    <div className='bg-gray-100 w-full ml-3 border mb-1 mt-2 pl-2 pr-2'>
       {!editMode ? (
         <div>
             <ul className='text-2xl font-bold'>{todo.title}</ul>

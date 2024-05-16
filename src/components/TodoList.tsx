@@ -21,7 +21,7 @@ export default function TodoApp({}: Props) {
     function fetch(){
         axios.get('https://jsonplaceholder.typicode.com/todos')
             .then(response => {
-                console.log('12313')
+                console.log('Fetch success', response.data);
                 setTodos(response.data);
             })
             .catch(error => {
@@ -33,22 +33,6 @@ export default function TodoApp({}: Props) {
         fetch();
     }, []);
 
-    
-
-    //function updateStt() {
-        // const index = todos.findIndex((todo) => todo.id === id);
-        // const updateStatus = todos[index]["completed"] !== true ? true : false;
-        // todos[index]["completed"] = updateStatus;
-        // setTodos([...todos]);
-       
-    //}
-
-    // const [showCompleted, setShowCompleted] = useState<boolean>(true);
-    // //const filterdTodo = showCompleted ? todos.filter(todo => todo.completed) : todos.filter(todo => !todo.completed)
-    // function ToggleShowTodo() {
-    //     setShowCompleted(!showCompleted);
-    // }
-
     //Xu ly search
     const SearchTerm = (term) => {
         setSearchTerm(term);
@@ -56,7 +40,7 @@ export default function TodoApp({}: Props) {
 
     
 
-    const onEdit = (id, editedTitle) => {
+    const onEdit = (id: number, editedTitle: string) => {
         const a = todos.find(item => item.id === id ? {...item, title: editedTitle} : item);
         const b = {...a, title: editedTitle}
         const c = todos.map(item => item.id === id ? b : item)
@@ -87,14 +71,8 @@ export default function TodoApp({}: Props) {
                         })
                         ?.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
                         .map( (todo ,index) => (
-                        //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
-                        <TodoItem key={`${todo?.id} +'-'+ ${index}`} todo={todo} 
-                        onEdit={onEdit}
-                        setTodos={setTodos}
-                        todos={todos}
-                        
-                        />
-                        
+                            //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
+                            <TodoItem key={`${todo?.id} +'-'+ ${index}`} todo={todo} onEdit={onEdit} setTodos={setTodos} todos={todos} />                      
                         ))
                 }           
             </ul>
