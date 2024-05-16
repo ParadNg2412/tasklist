@@ -25,10 +25,10 @@ export default function EditTodo({todo, onSave, onCancel}){
 
     return (
         <div className=''>
-            <form className='justify-enter items-center' onSubmit={(e)=>saveEditTodo(e)}>
+            <form className='justify-enter items-center' onSubmit={(e)=>saveEditTodo(e)} onReset={onCancel}>
                 <input type="text" value={editedTitle} onChange={(e) => {setEditedTitle(e.target.value)}} className='border-gray-300 border rounded-1 px-4 py-2'/>
                 <button type="submit" className='bg-green-500 text-white px-4 py-2 rounded-r'>Save</button>
-                <button onClick={onCancel} className='bg-gray-400 text-white px-4 py-2 rounded-r ml-1'>X</button>
+                <button type="reset" className='bg-gray-400 text-white px-4 py-2 rounded-r ml-1'>X</button>
             </form>
         </div>
     );
