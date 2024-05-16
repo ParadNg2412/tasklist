@@ -22,7 +22,7 @@ export default function SearchTodo({setSearchTerm, fetchSearchResult}){
     }
 
     return (    
-        <span className='px-20'>
+        <span className='px-10'>
             <input  type="text" value={searchText} 
                 onChange={change} placeholder='Search Todo...' className='border-gray-500 border rounded-1 px-5 py-2 ml-40'/>
                 {searchText && <button onClick={() => cancelSearch()} className='font-bold bg-gray-400 text-white px-4 py-2 rounded-r ml-0'>Cancel</button>}

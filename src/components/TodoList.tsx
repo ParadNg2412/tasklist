@@ -55,20 +55,17 @@ export default function TodoApp({}: Props) {
         <div className=''>
             <h2 className='font-serif text-6xl font-bold mb-2'>Todo App</h2>
             <h3 className='font-sans text-2xl mb-4'>Task management</h3>
-            <span>
+            <span className='ml-40'>
                 <AddTodo setTodos={setTodos} todos={todos}/>
                 <SearchTodo setSearchTerm={SearchTerm} fetchSearchResult={SearchTerm}/>
             </span>
-            <SortbyStt setSortByStt={setSortByStatus} />
+            <ul className='ml-40'>
+                <SortbyStt setSortByStt={setSortByStatus} />
+            </ul>
             
-            
-            <ul ref={animationParent}>
-                
-                
+            <ul ref={animationParent} className='overflow-scroll border ml-40 mr-40 h-96'>
                 {
-                    
                     todos
-                    
                         ?.filter(todo => {
                             if(sortByStatus === 'all') return true;
                             if(sortByStatus === 'completed') return todo.completed;
@@ -82,6 +79,9 @@ export default function TodoApp({}: Props) {
                         ))
                 }           
             </ul>
+            
+            
+            
         </div>
   )
 }

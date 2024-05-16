@@ -6,9 +6,6 @@ import DelTodo from './DelTodo';
 import Status from './Status';
 
 
-
-type Props = {}
-
 export default function TodoItem({todo, onEdit, todos, setTodos}) {
     // const [animationParent] = useAutoAnimate();
     const [editMode, setEditMode] = useState(false);
@@ -28,7 +25,7 @@ export default function TodoItem({todo, onEdit, todos, setTodos}) {
 
 
   return (
-    <div className=' bg-gray-100 w-full ml-3 border mb-1 mt-2 pl-2 pr-2'>
+    <div className='bg-scroll bg-gray-100 ml-10 mr-10 border mb-1 mt-2 pl-2 pr-2'>
       {!editMode ? (
         <div>
             <ul className='font-sans text-2xl font-bold'>{todo.title}</ul>
