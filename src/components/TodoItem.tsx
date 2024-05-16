@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useState , useEffect} from 'react'
+import React, {useState} from 'react'
 //import {useAutoAnimate} from '@formkit/auto-animate/react';
 import EditTodo from './EditTodo';
 import DelTodo from './DelTodo';
@@ -43,7 +43,7 @@ export default function TodoItem({todo, onEdit, todos, setTodos}) {
               <DelTodo todoId={todo.id} todos={todos} setTodos={setTodos} />
             </div>
         </div>) : (
-        <EditTodo todo={todo} onSave={onSave} onCancel={CancelEdit} />
+        <EditTodo todo={todo} onSave={onSave} onCancel={CancelEdit}/>
         
       )} 
     </div>

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default function Status({todoId, completed, todos, setTodos}){
     function statusChange(){
-        axios.put(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {completed: !completed})
+        axios.put(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {completed})
             .then(() => {
                 const updatedStt = todos.map(todo => {
                     if(todo.id === todoId){
@@ -11,6 +11,7 @@ export default function Status({todoId, completed, todos, setTodos}){
                     }
                     return todo;
                 });
+                console.log("Status updated: ", todoId, !completed);
                 setTodos(updatedStt);
             })
             .catch(error => {

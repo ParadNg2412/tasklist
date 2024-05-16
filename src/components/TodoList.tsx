@@ -41,12 +41,15 @@ export default function TodoApp({}: Props) {
     
 
     const onEdit = (id: number, editedTitle: string) => {
-        const a = todos.find(item => item.id === id ? {...item, title: editedTitle} : item);
-        const b = {...a, title: editedTitle}
-        const c = todos.map(item => item.id === id ? b : item)
+        console.log('id:',id)
+        console.log('todo:',todos)
+        const a = todos.find(item => item.id === id && item);
+        const c = todos.map(item => item.id === id ? {...a, title: editedTitle} : item)
         setTodos(c);
         
     };
+
+
 
     return (
         <div className=''>
@@ -56,14 +59,17 @@ export default function TodoApp({}: Props) {
                 <AddTodo setTodos={setTodos} todos={todos}/>
                 <SearchTodo setSearchTerm={SearchTerm} fetchSearchResult={SearchTerm}/>
             </span>
-            <SortbyStt setSortByStt={setSortByStatus}/>
+            <SortbyStt setSortByStt={setSortByStatus} />
+            
             
             <ul ref={animationParent}>
                 
+                
                 {
                     
-                    (todos)
-                        ?.filter(todo => {
+                    todos
+                    
+                        .filter(todo => {
                             if(sortByStatus === 'all') return true;
                             if(sortByStatus === 'completed') return todo.completed;
                             if(sortByStatus === 'incomplete') return !todo.completed;
