@@ -6,7 +6,7 @@ import axios from 'axios';
 import TodoItem from './TodoItem'
 import AddTodo from './AddTodo';
 import SearchTodo from './SearchTodo';
-import { title } from 'process';
+import SortbyStt from './SortTodoStt';
 
 
 type Props = {}
@@ -15,6 +15,7 @@ export default function TodoApp({}: Props) {
     const [animationParent] = useAutoAnimate();
     const [todos, setTodos] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [sortByStatus, setSortByStatus] = useState('all');
 
     //Fetch API
     function fetch(){
@@ -71,13 +72,19 @@ export default function TodoApp({}: Props) {
                 <AddTodo setTodos={setTodos} todos={todos}/>
                 <SearchTodo setSearchTerm={SearchTerm} fetchSearchResult={SearchTerm}/>
             </span>
-            
+            <SortbyStt setSortByStt={setSortByStatus}/>
             
             <ul ref={animationParent}>
                 
                 {
                     
-                    todos
+                    (todos)
+                        ?.filter(todo => {
+                            if(sortByStatus === 'all') return true;
+                            if(sortByStatus === 'completed') return todo.completed;
+                            if(sortByStatus === 'incomplete') return !todo.completed;
+                            return true;
+                        })
                         ?.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
                         .map( (todo ,index) => (
                         //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
