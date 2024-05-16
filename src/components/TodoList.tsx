@@ -69,14 +69,14 @@ export default function TodoApp({}: Props) {
                     
                     todos
                     
-                        .filter(todo => {
+                        ?.filter(todo => {
                             if(sortByStatus === 'all') return true;
                             if(sortByStatus === 'completed') return todo.completed;
                             if(sortByStatus === 'incomplete') return !todo.completed;
                             return true;
                         })
                         ?.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
-                        .map( (todo ,index) => (
+                        ?.map( (todo ,index) => (
                             //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
                             <TodoItem key={`${todo?.id} +'-'+ ${index}`} todo={todo} onEdit={onEdit} setTodos={setTodos} todos={todos} />                      
                         ))

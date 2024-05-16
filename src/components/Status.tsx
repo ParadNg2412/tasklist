@@ -5,6 +5,14 @@ export default function Status({todoId, completed, todos, setTodos}){
     function statusChange(){
         axios.put(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {completed})
             .then(() => {
+                
+                console.log("Status updated: ", todoId, !completed);
+                
+            })
+            .catch(error => {
+                console.error('Error updating Todo Status', error);
+            })
+            .finally(() => {
                 const updatedStt = todos.map(todo => {
                     if(todo.id === todoId){
                         return {...todo, completed: !completed};
@@ -14,9 +22,6 @@ export default function Status({todoId, completed, todos, setTodos}){
                 console.log("Status updated: ", todoId, !completed);
                 setTodos(updatedStt);
             })
-            .catch(error => {
-                console.error('Error updating Todo Status', error);
-            });
     }
 
     return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export default function SortbyStt({setSortByStt}) {
-    const SortbyStt = (e) => {
+    const SortbyStt = (e: any) => {
         setSortByStt(e.target.value);
     };
 

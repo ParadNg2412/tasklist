@@ -6,6 +6,7 @@ import axios from 'axios';
 export default function AddTodo({ todos, setTodos }){
     const [inputText, setInputText] = useState('');
     const [nextId, setNextId] = useState(201);
+    // console.log('AddTodo',todos)
     function addTodo(){
         if (inputText.trim() !== '') {
             axios.post('https://jsonplaceholder.typicode.com/todos', {
@@ -14,15 +15,17 @@ export default function AddTodo({ todos, setTodos }){
               completed: false
             })
             .then(response => {
-              console.log('New todo added: ', {...response.data,
-              id: nextId});
-              setTodos([...todos, {
-                ...response.data,
-                id: nextId
-              }]);
+              //console.log('New todo added: ', {...response.data,
+              //id: nextId});
+              console.log('New todo added: ',[...todos,response.data]);
+              //setTodos([...todos,response.data]);
+              setTodos([...todos, 
+                {...response.data,
+                id: nextId}
+              ]);
               
               setInputText('');
-              setNextId(prevId => prevId + 1)
+              setNextId(prevId => prevId + 1);
             })
             .catch(error => {
               console.error('Error adding todo:', error);

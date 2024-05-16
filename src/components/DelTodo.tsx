@@ -9,6 +9,7 @@ export default function DelTodo({todoId, todos, setTodos}){
                 .then(() => {
                     console.log('Todo deleted', id);
                     setTodos(todos.filter(todo => todo.id !== id));
+                    console.log('New Todo list: ', todos);
                 })
                 .catch(error => {
                     console.error('Error deleting todo:', error);
