@@ -63,7 +63,7 @@ export default function TodoApp({}: Props) {
                 <SortbyStt setSortByStt={setSortByStatus} />
             </ul>
             
-            <ul ref={animationParent} className='overflow-scroll border ml-40 mr-40 h-96'>
+            <ul ref={animationParent} className='overflow-scroll border ml-20 mr-20 h-[40.625rem] mt-3'>
                 {
                     todos
                         ?.filter(todo => {
