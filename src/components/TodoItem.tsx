@@ -28,12 +28,13 @@ export default function TodoItem({todo, onEdit, todos, setTodos}) {
 
 
   return (
-    <div className='bg-gray-100 w-full ml-3 border mb-1 mt-2 pl-2 pr-2'>
+    <div className=' bg-gray-100 w-full ml-3 border mb-1 mt-2 pl-2 pr-2'>
       {!editMode ? (
         <div>
-            <ul className='text-2xl font-bold'>{todo.title}</ul>
+            <ul className='font-sans text-2xl font-bold'>{todo.title}</ul>
             <div className='flex item-center justify-between py-2 mb-2'>
-              <ul className=''>Status: 
+              <ul className=''>
+                <span className='text-gray-600'>Status: </span>
                 <span className={`${todo.completed === true ? 'text-green-400':'text-red-500'} font-bold ml-1`}>{`${todo.completed === true ? "Completed" : "Incomplete"}`}</span>
                 <Status todoId={todo.id} completed={todo.completed} todos={todos} setTodos={setTodos}/>
               </ul>

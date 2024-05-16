@@ -53,8 +53,8 @@ export default function TodoApp({}: Props) {
 
     return (
         <div className=''>
-            <h2 className='text-6xl font-bold mb-2'>Todo App</h2>
-            <h3 className='text-2xl mb-4'>Task management</h3>
+            <h2 className='font-serif text-6xl font-bold mb-2'>Todo App</h2>
+            <h3 className='font-sans text-2xl mb-4'>Task management</h3>
             <span>
                 <AddTodo setTodos={setTodos} todos={todos}/>
                 <SearchTodo setSearchTerm={SearchTerm} fetchSearchResult={SearchTerm}/>
