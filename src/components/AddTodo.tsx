@@ -19,9 +19,9 @@ export default function AddTodo({ todos, setTodos }){
               //id: nextId});
               console.log('New todo added: ',[...todos,response.data]);
               //setTodos([...todos,response.data]);
-              setTodos([...todos, 
+              setTodos([ 
                 {...response.data,
-                id: nextId}
+                id: nextId}, ...todos
               ]);
               
               setInputText('');

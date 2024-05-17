@@ -9,8 +9,9 @@ import Status from './Status';
 export default function TodoItem({todo, onEdit, todos, setTodos}) {
     // const [animationParent] = useAutoAnimate();
     const [editMode, setEditMode] = useState(false);
+    
 
-    const editTodo = () => {
+    const editTodo = () => {      
       setEditMode(true);
     }
     

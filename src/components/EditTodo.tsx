@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export default function EditTodo({todo, onSave, onCancel}){
     const [editedTitle, setEditedTitle] = useState('');
     
+    useEffect(() => {
+        if(todo){
+            setEditedTitle(todo.title);
+        }
+    }, [todo]);
+
     const saveEditTodo = (e:any) => {
         e.preventDefault();
         if(editedTitle.trim() === ""){
