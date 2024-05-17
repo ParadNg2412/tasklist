@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function SortbyStt({setSortByStt}) {
+export default function SortbyStt({setSortByStt} : {[key: string]: any;}) {
     const SortbyStt = (e: any) => {
         setSortByStt(e.target.value);
     };
-
-    
-
 
     return (
         <div className='pt-2 pb-2'>

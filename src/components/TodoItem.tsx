@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React from 'react'
 //import {useAutoAnimate} from '@formkit/auto-animate/react';
 import EditTodo from './EditTodo';
 import DelTodo from './DelTodo';
@@ -9,9 +9,8 @@ import Status from './Status';
 export default function TodoItem({todo, onEdit, todos, setTodos, setEditId, editId}:{
   setEditId: (id: number | null) => void;
   editId: number | null;
-  [key: string]: any}) {
-    // const [animationParent] = useAutoAnimate();
-    //const [editMode, setEditMode] = useState(false);
+  [key: string]: any;}) {
+    
     
     const editTodo = () => {      
       //setEditMode(true);
@@ -46,8 +45,7 @@ export default function TodoItem({todo, onEdit, todos, setTodos, setEditId, edit
               <DelTodo todoId={todo.id} todos={todos} setTodos={setTodos} />
             </div>
         </div>) : (
-        <EditTodo todo={todo} onSave={onSave} onCancel={CancelEdit}/>
-        
+          <EditTodo todo={todo} onSave={onSave} onCancel={CancelEdit}/>      
       )} 
     </div>
   )

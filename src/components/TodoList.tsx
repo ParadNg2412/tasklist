@@ -64,7 +64,7 @@ export default function TodoApp({}: Props) {
                 <SortbyStt setSortByStt={setSortByStatus} />
             </ul>
             
-            <ul ref={animationParent} className=' ml-20 mr-20 h-[42.5rem] mt-3'>
+            <ul ref={animationParent} className='ml-20 mr-20 h-[42.5rem] mt-3'>
                 {
                     todos
                         ?.filter(todo => {
@@ -81,9 +81,6 @@ export default function TodoApp({}: Props) {
                         ))
                 }           
             </ul>
-            
-            
-            
         </div>
   )
 }

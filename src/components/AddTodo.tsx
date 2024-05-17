@@ -3,10 +3,10 @@ import axios from 'axios';
 
 
 
-export default function AddTodo({ todos, setTodos }){
+export default function AddTodo({ todos, setTodos } : {[key: string]: any}){
     const [inputText, setInputText] = useState('');
     const [nextId, setNextId] = useState(201);
-    // console.log('AddTodo',todos)
+    
     function addTodo(){
         if (inputText.trim() !== '') {
             axios.post('https://jsonplaceholder.typicode.com/todos', {
@@ -30,7 +30,10 @@ export default function AddTodo({ todos, setTodos }){
             .catch(error => {
               console.error('Error adding todo:', error);
             });
-          }
+        }
+        else{
+          alert("Please input Todo name before adding!");
+        }
     }
     return (
         <span className=''>

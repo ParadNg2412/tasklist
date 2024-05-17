@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export default function EditTodo({todo, onSave, onCancel}){
+export default function EditTodo({todo, onSave, onCancel} : {
+    [key: string]: any;
+}){
     const [editedTitle, setEditedTitle] = useState('');
     
     useEffect(() => {

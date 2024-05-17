@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import debounce from 'lodash/debounce';
 
-export default function SearchTodo({setSearchTerm, fetchSearchResult}){
+export default function SearchTodo({setSearchTerm, fetchSearchResult} : {[key: string]: any;}){
     const [searchText, setSearchText] = useState('');
     
-
     const searchTodo = debounce((key) => {
         setSearchTerm(key.trim());
         fetchSearchResult(key.trim());

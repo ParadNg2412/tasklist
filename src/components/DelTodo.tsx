@@ -1,7 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 
-export default function DelTodo({todoId, todos, setTodos}){
+export default function DelTodo({todoId, todos, setTodos} : {
+    todoId: number | null;
+    [key: string]: any;
+}){
     
     const DeleteTodo = (id) => {
         if (window.confirm('Are you sure you want to delete this Todo ?')) {

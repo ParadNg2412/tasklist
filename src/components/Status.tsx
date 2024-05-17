@@ -1,7 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 
-export default function Status({todoId, completed, todos, setTodos}){
+export default function Status({todoId, completed, todos, setTodos} : {
+    todoId: number | null;
+    completed: boolean;
+    [key: string]: any;
+}){
     function statusChange(){
         axios.put(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {completed})
             .then(() => {
