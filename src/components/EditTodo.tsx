@@ -28,7 +28,7 @@ export default function EditTodo({todo, onSave, onCancel} : {
                 .catch(error => {
                     console.error('Error updating todo:', error);
                 }).finally(() => {
-                    console.log('Edit success!', todo.id, editedTitle, todo.completed);
+                    console.log('Edit success!', todo.id, editedTitle);
                     onSave(todo.id, editedTitle, todo.completed);
                 });
         }       

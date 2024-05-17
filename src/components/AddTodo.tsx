@@ -18,12 +18,10 @@ export default function AddTodo({ todos, setTodos } : {[key: string]: any}){
               //console.log('New todo added: ', {...response.data,
               //id: nextId});
               console.log('New todo added: ',[...todos,response.data]);
-              //setTodos([...todos,response.data]);
               setTodos([ 
                 {...response.data,
                 id: nextId}, ...todos
-              ]);
-              
+              ]);             
               setInputText('');
               setNextId(prevId => prevId + 1);
             })
