@@ -15,7 +15,7 @@ export default function EditTodo({todo, onSave, onCancel} : {
     const saveEditTodo = (e:any) => {
         e.preventDefault();
         if(editedTitle.trim() === ""){
-            alert('Todo name cannot be empty! Please input Todo name!');
+            alert('Todo title cannot be empty! Please input Todo title!');
             return;
         }
         else{

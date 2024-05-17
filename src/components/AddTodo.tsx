@@ -32,7 +32,7 @@ export default function AddTodo({ todos, setTodos } : {[key: string]: any}){
             });
         }
         else{
-          alert("Please input Todo name before adding!");
+          alert("Please input Todo title before adding!");
         }
     }
     return (
