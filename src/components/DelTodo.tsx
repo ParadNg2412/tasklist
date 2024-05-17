@@ -2,16 +2,16 @@ import React from 'react';
 import axios from 'axios';
 
 export default function DelTodo({todoId, todos, setTodos} : {
-    todoId: number | null;
+    todoId: number;
     [key: string]: any;
 }){
     
-    const DeleteTodo = (id) => {
+    const DeleteTodo = (id:number) => {
         if (window.confirm('Are you sure you want to delete this Todo ?')) {
             axios.delete(`https://jsonplaceholder.typicode.com/todos/${todoId}`)
                 .then(() => {
                     console.log('Todo deleted', id);
-                    setTodos(todos.filter(todo => todo.id !== id));
+                    setTodos(todos.filter((todo:any) => todo.id !== id));
                     console.log('New Todo list: ', todos);
                 })
                 .catch(error => {
