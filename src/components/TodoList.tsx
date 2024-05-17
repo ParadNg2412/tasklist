@@ -16,6 +16,7 @@ export default function TodoApp({}: Props) {
     const [todos, setTodos] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortByStatus, setSortByStatus] = useState('all');
+    const [editId, setEditId] = useState<number | null>(null);
 
     //Fetch API
     function fetch(){
@@ -34,7 +35,7 @@ export default function TodoApp({}: Props) {
     }, []);
 
     //Xu ly search
-    const SearchTerm = (term) => {
+    const SearchTerm = (term: string) => {
         setSearchTerm(term);
     };
 
@@ -75,7 +76,8 @@ export default function TodoApp({}: Props) {
                         ?.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
                         ?.map( (todo ,index) => (
                             //key={`${todo?.id} +'-'+ ${index}`}  key={todo.id}
-                            <TodoItem key={`${todo?.id} +'-'+ ${index}`} todo={todo} onEdit={onEdit} setTodos={setTodos} todos={todos} />                      
+                            <TodoItem key={`${todo?.id} +'-'+ ${index}`} todo={todo} onEdit={onEdit} 
+                            setTodos={setTodos} todos={todos} editId={editId} setEditId={setEditId} />                      
                         ))
                 }           
             </ul>

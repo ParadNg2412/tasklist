@@ -13,7 +13,7 @@ export default function Status({todoId, completed, todos, setTodos}){
                 console.error('Error updating Todo Status', error);
             })
             .finally(() => {
-                const updatedStt = todos.map(todo => {
+                const updatedStt = todos.map((todo) => {
                     if(todo.id === todoId){
                         return {...todo, completed: !completed};
                     }

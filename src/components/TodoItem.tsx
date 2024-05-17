@@ -6,17 +6,21 @@ import DelTodo from './DelTodo';
 import Status from './Status';
 
 
-export default function TodoItem({todo, onEdit, todos, setTodos}) {
+export default function TodoItem({todo, onEdit, todos, setTodos, setEditId, editId}:{
+  setEditId: (id: number | null) => void;
+  editId: number | null;
+  [key: string]: any}) {
     // const [animationParent] = useAutoAnimate();
-    const [editMode, setEditMode] = useState(false);
+    //const [editMode, setEditMode] = useState(false);
     
-
     const editTodo = () => {      
-      setEditMode(true);
+      //setEditMode(true);
+      setEditId(todo.id);
     }
     
     const CancelEdit = () => {
-      setEditMode(false);
+      //setEditMode(false);
+      setEditId(null);
     };
 
     const onSave = (id:number, editedTitle:string) => {
@@ -27,7 +31,7 @@ export default function TodoItem({todo, onEdit, todos, setTodos}) {
 
   return (
     <div className='bg-scroll bg-gray-100 ml-10 mr-10 border mb-1 mt-2 pl-2 pr-2'>
-      {!editMode ? (
+      {editId !== todo?.id ? (
         <div>
             <ul className='font-sans text-2xl font-bold'>{todo.title}</ul>
             <div className='flex item-center justify-between py-2 mb-2'>

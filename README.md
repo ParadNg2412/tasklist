@@ -2,6 +2,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Delete folder node_modules then install it again:
+```bash
+yarn
+#or
+npm install
+```
+
 Install packages:
 ```bash
 npm install react
