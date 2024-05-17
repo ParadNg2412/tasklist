@@ -29,7 +29,7 @@ export default function EditTodo({todo, onSave, onCancel} : {
                     console.error('Error updating todo:', error);
                 }).finally(() => {
                     console.log('Edit success!', todo.id, editedTitle);
-                    onSave(todo.id, editedTitle, todo.completed);
+                    onSave(todo.id, editedTitle);
                 });
         }       
     };

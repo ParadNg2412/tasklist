@@ -10,7 +10,7 @@ export default function Status({todoId, completed, todos, setTodos} : {
         axios.put(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {completed})
             .then(() => {
                 
-                console.log("Status updated: ", todoId, !completed);
+                //console.log("Status updated: ", todoId, !completed);
                 
             })
             .catch(error => {
